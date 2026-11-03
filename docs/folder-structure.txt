@@ -1,0 +1,316 @@
+
+src/
+│
+├── app/                        # Next.js App Router
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── globals.css
+│   └── not-found.tsx
+│
+├── features/                   # Feature-specific modules
+│   └── portfolio/
+│       │
+│       ├── hero/
+│       │   ├── components/
+│       │   │   └── Hero.tsx
+│       │   ├── hero.data.ts
+│       │   └── hero.types.ts
+│       │
+│       ├── about/
+│       │   ├── components/
+│       │   │   └── About.tsx
+│       │   ├── about.data.ts
+│       │   └── about.types.ts
+│       │
+│       ├── skills/
+│       │   ├── components/
+│       │   │   ├── Skills.tsx
+│       │   │   └── SkillCard.tsx
+│       │   ├── skills.data.ts
+│       │   └── skills.types.ts
+│       │
+│       ├── experience/
+│       │   ├── components/
+│       │   │   └── Experience.tsx
+│       │   ├── experience.data.ts
+│       │   └── experience.types.ts
+│       │
+│       ├── education/
+│       │   ├── components/
+│       │   │   └── Education.tsx
+│       │   └── education.data.ts
+│       │
+│       ├── projects/
+│       │   ├── components/
+│       │   │   ├── Projects.tsx
+│       │   │   └── ProjectCard.tsx
+│       │   ├── projects.data.ts
+│       │   └── projects.types.ts
+│       │
+│       ├── contact/
+│       │   ├── components/
+│       │   │   └── Contact.tsx
+│       │   └── contact.data.ts
+│       │
+│       └── navigation/
+│           ├── navigation.data.ts
+│           └── navigation.types.ts
+│
+├── components/                 # Globally reusable components
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── Badge.tsx
+│   │   └── SectionHeader.tsx
+│   │
+│   └── layout/
+│       ├── Header.tsx
+│       ├── Footer.tsx
+│       └── MobileMenu.tsx
+│
+├── hooks/                      # Custom React hooks
+│   ├── useScrollProgress.ts
+│   └── useActiveSection.ts
+│
+├── lib/                        # Utilities and configurations
+│   ├── utils.ts
+│   └── constants.ts
+│
+├── types/                      # Globally shared types
+│   └── common.types.ts
+│
+└── styles/
+
+
+my-portfolio/
+├── public/
+│   ├── images/
+│   ├── icons/
+│   ├── favicon.svg
+│   └── resume.pdf
+│
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── globals.css
+│   │   ├── not-found.tsx
+│   │   ├── loading.tsx
+│   │   ├── error.tsx
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── page.tsx
+│   │   │   └── [slug]/
+│   │   │       └── page.tsx
+│   │   │
+│   │   └── admin/
+│   │       ├── layout.tsx
+│   │       ├── login/
+│   │       │   └── page.tsx
+│   │       ├── page.tsx
+│   │       └── projects/
+│   │           └── page.tsx
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   └── Container.tsx
+│   │   │
+│   │   ├── common/
+│   │   │   ├── SectionHeading.tsx
+│   │   │   ├── SocialLinks.tsx
+│   │   │   └── ScrollToTop.tsx
+│   │   │
+│   │   └── layout/
+│   │       ├── Navbar.tsx
+│   │       ├── Footer.tsx
+│   │       ├── MainLayout.tsx
+│   │       └── AdminSidebar.tsx
+│   │
+│   ├── features/
+│   │   ├── portfolio/
+│   │   │   ├── hero/
+│   │   │   │   ├── HeroSection.tsx
+│   │   │   │   └── hero.data.ts
+│   │   │   ├── about/
+│   │   │   │   ├── AboutSection.tsx
+│   │   │   │   └── about.data.ts
+│   │   │   ├── skills/
+│   │   │   │   ├── SkillsSection.tsx
+│   │   │   │   └── skills.data.ts
+│   │   │   ├── experience/
+│   │   │   │   ├── ExperienceSection.tsx
+│   │   │   │   └── experience.data.ts
+│   │   │   ├── education/
+│   │   │   │   ├── EducationSection.tsx
+│   │   │   │   └── education.data.ts
+│   │   │   └── projects/
+│   │   │       ├── ProjectsSection.tsx
+│   │   │       ├── ProjectCard.tsx
+│   │   │       ├── projects.data.ts
+│   │   │       ├── projects.types.ts
+│   │   │       └── projects.service.ts
+│   │   │
+│   │   ├── contact/
+│   │   │   ├── ContactSection.tsx
+│   │   │   ├── ContactForm.tsx
+│   │   │   └── contact.schema.ts
+│   │   │
+│   │   ├── admin-auth/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── auth.service.ts
+│   │   │
+│   │   └── admin-projects/
+│   │       ├── ProjectForm.tsx
+│   │       ├── ProjectTable.tsx
+│   │       └── project.service.ts
+│   │
+│   ├── providers/
+│   │   └── ThemeProvider.tsx
+│   │
+│   ├── hooks/
+│   │   ├── useScrollProgress.ts
+│   │   └── useTheme.ts
+│   │
+│   ├── lib/
+│   │   ├── firebase.ts
+│   │   ├── utils.ts
+│   │   └── animations.ts
+│   │
+│   ├── services/
+│   │   └── email.service.ts
+│   │
+│   ├── types/
+│   │   ├── common.types.ts
+│   │   └── project.types.ts
+│   │
+│   └── assets/
+│       ├── images/
+│       └── fonts/
+│
+├── .env.example
+├── .gitignore
+├── eslint.config.mjs
+├── next.config.ts
+├── package.json
+├── tsconfig.json
+└── README.md
+
+
+
+
+my-portfolio/
+├── public/
+│   ├── images/
+│   ├── icons/
+│   ├── favicon.svg
+│   └── resume.pdf
+│
+├── src/
+│   ├── app/
+│   │   ├── App.tsx
+│   │   ├── router.tsx
+│   │   └── providers.tsx
+│   │
+│   ├── pages/
+│   │   ├── HomePage.tsx
+│   │   ├── ProjectsPage.tsx
+│   │   ├── ProjectDetailsPage.tsx
+│   │   ├── NotFoundPage.tsx
+│   │   └── admin/
+│   │       ├── AdminLoginPage.tsx
+│   │       ├── AdminDashboardPage.tsx
+│   │       └── ManageProjectsPage.tsx
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   └── Container.tsx
+│   │   ├── common/
+│   │   │   ├── SectionHeading.tsx
+│   │   │   ├── SocialLinks.tsx
+│   │   │   └── ScrollToTop.tsx
+│   │   └── layout/
+│   │       ├── Navbar.tsx
+│   │       ├── Footer.tsx
+│   │       ├── MainLayout.tsx
+│   │       └── AdminLayout.tsx
+│   │
+│   ├── features/
+│   │   ├── hero/
+│   │   │   ├── components/
+│   │   │   ├── HeroSection.tsx
+│   │   │   └── hero.data.ts
+│   │   ├── about/
+│   │   │   ├── components/
+│   │   │   ├── AboutSection.tsx
+│   │   │   └── about.data.ts
+│   │   ├── skills/
+│   │   │   ├── components/
+│   │   │   ├── SkillsSection.tsx
+│   │   │   └── skills.data.ts
+│   │   ├── experience/
+│   │   │   ├── components/
+│   │   │   ├── ExperienceSection.tsx
+│   │   │   └── experience.data.ts
+│   │   ├── projects/
+│   │   │   ├── components/
+│   │   │   │   ├── ProjectsSection.tsx
+│   │   │   │   ├── ProjectCard.tsx
+│   │   │   │   └── ProjectDetails.tsx
+│   │   │   ├── projects.service.ts
+│   │   │   ├── projects.data.ts
+│   │   │   └── projects.types.ts
+│   │   ├── education/
+│   │   │   ├── EducationSection.tsx
+│   │   │   └── education.data.ts
+│   │   ├── contact/
+│   │   │   ├── components/
+│   │   │   ├── ContactSection.tsx
+│   │   │   ├── ContactForm.tsx
+│   │   │   └── contact.schema.ts
+│   │   ├── admin-auth/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── auth.service.ts
+│   │   └── admin-projects/
+│   │       ├── ProjectForm.tsx
+│   │       ├── ProjectTable.tsx
+│   │       └── project-admin.service.ts
+│   │
+│   ├── hooks/
+│   │   ├── useScrollProgress.ts
+│   │   └── useTheme.ts
+│   │
+│   ├── lib/
+│   │   ├── firebase.ts
+│   │   ├── utils.ts
+│   │   └── animations.ts
+│   │
+│   ├── services/
+│   │   └── email.service.ts
+│   │
+│   ├── types/
+│   │   ├── common.types.ts
+│   │   └── global.types.ts
+│   │
+│   ├── assets/
+│   │   ├── images/
+│   │   ├── fonts/
+│   │   └── icons/
+│   │
+│   ├── styles/
+│   │   └── globals.css
+│   │
+│   └── main.tsx
+│
+├── .env.example
+├── .gitignore
+├── eslint.config.js
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md

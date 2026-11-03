@@ -1,0 +1,80 @@
+/* Grid lines with radial fade */
+.grid-glow-lines {
+    background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-position: center;
+
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%,
+            #000 30%,
+            transparent 80%);
+
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%,
+            #000 30%,
+            transparent 80%);
+}
+
+/* Grid sizes */
+.grid-size-sm {
+    background-size: 24px 24px;
+}
+
+.grid-size-md {
+    background-size: 32px 32px;
+}
+
+.grid-size-lg {
+    background-size: 48px 48px;
+}
+
+/* SVG-based grain texture */
+.bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+
+    background-repeat: repeat;
+    background-size: 180px 180px;
+    mix-blend-mode: screen;
+}
+
+.noise-subtle {
+    opacity: 0.03;
+}
+
+.noise-medium {
+    opacity: 0.05;
+}
+
+.noise-strong {
+    opacity: 0.08;
+}
+
+/* Glowing particle animation */
+.animate-pulse-soft {
+    animation: 2.4s ease-in-out infinite pulse-soft;
+
+    box-shadow:
+        0 0 6px rgb(99 102 241 / 50%),
+        0 0 12px rgb(99 102 241 / 30%);
+}
+
+@keyframes pulse-soft {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.55;
+        transform: scale(0.82);
+    }
+}
+
+/* Accessibility: respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .animate-pulse-soft {
+        animation: none;
+        opacity: 0.8;
+    }
+}
