@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import ShootingStarGrid from '@/components/animation/ShootingStarGrid';
+import ShootingStarGrid from '@/components/common/ShootingStarGrid';
 import HeroLeft from './Heroleft';
 import HeroRight from './Heroright';
 

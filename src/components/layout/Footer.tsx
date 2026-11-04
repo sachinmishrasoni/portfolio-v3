@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion, type Variants } from 'motion/react';
 import { FiArrowUp } from 'react-icons/fi';
-import { CONTACT_LINKS } from '@/features/portfolio-v1/contact/contact.data';
+import { CONTACT_LINKS, LOCATION } from '@/features/portfolio/contact/contact.data';
 import { IoLocationOutline } from 'react-icons/io5';
 // Reuses the same links as the Contact section (GitHub, LinkedIn, Email). Adjust the path if yours differs.
 // import { CONTACT_LINKS } from '@/components/contact/contact.data';
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
 
                         <p className="mt-1.5 inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
                             <IoLocationOutline aria-hidden="true" className="shrink-0 text-primary" />
-                            <span>Karol Bagh, New Delhi, India</span>
+                            <span>{LOCATION}</span>
                         </p>
 
                         <ul className="mt-4 flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-muted-foreground">

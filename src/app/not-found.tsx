@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { FiArrowLeft, FiHome } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
-import ShootingStarGrid from "@/components/animation/ShootingStarGrid";
+import ShootingStarGrid from "@/components/common/ShootingStarGrid";
 
 // Parent staggers its children in one after another
 const containerVariants: Variants = {

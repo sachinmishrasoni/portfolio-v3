@@ -13,8 +13,9 @@ import {
 // Same links and location as the Contact section / footer. Adjust the path if yours differs.
 // import { CONTACT_LINKS, LOCATION } from '@/components/contact/contact.data';
 import { NAV_ITEMS } from './nav.data';
-import { CONTACT_LINKS, LOCATION } from '@/features/portfolio-v1/contact/contact.data';
+import { CONTACT_LINKS, LOCATION } from '@/features/portfolio/contact/contact.data';
 import { Button } from '../ui/button';
+import { IoLocationOutline } from 'react-icons/io5';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -140,7 +141,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onOpenChange }) => {
                                 </li>
                             ))}
                         </ul>
-                        <p className="font-mono text-sm text-muted-foreground">{LOCATION}</p>
+                        <p className="mt-1.5 inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
+                            <IoLocationOutline aria-hidden="true" className="shrink-0 text-primary" />
+                            <span>{LOCATION}</span>
+                        </p>
                     </div>
                 </div>
             </SheetContent>

@@ -2,7 +2,7 @@ import type { IconType } from 'react-icons';
 import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 
 export const CONTACT_EMAIL = 'sachunmishraf103@gmail.com';
-export const LOCATION = 'New Delhi, India';
+export const LOCATION = 'Karol Bagh, New Delhi, India';
 
 export type ContactLink = {
     id: string;
