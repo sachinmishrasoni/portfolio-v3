@@ -64,7 +64,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onOpenChange }) => {
             <SheetContent
                 side="top"
                 // Full-screen; `[&>button]:hidden` hides shadcn's built-in close button because we render our own
-                className="h-dvh w-full max-w-none gap-0 border-0 bg-background p-0 sm:max-w-none lg:hidden [&>button]:hidden"
+                className="gap-0 border-0 bg-background p-0 lg:hidden [&>button]:hidden data-[side=top]:h-dvh data-[side=top]:max-h-none data-[side=top]:w-full data-[side=top]:max-w-none"
             >
                 <SheetTitle className="sr-only">Navigation menu</SheetTitle>
                 <SheetDescription className="sr-only">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useId, useMemo, useState } from 'react';
+import React, { useId, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { FiAlertCircle, FiCheck, FiLoader, FiSend } from 'react-icons/fi';
 import { CONTACT_EMAIL } from './contact.data';
@@ -9,6 +9,7 @@ import {
     EMPTY_VALUES,
     MESSAGE_MAX,
     validateContact,
+    type ContactErrors,
     type ContactField,
     type ContactValues,
 } from './contact.validation';
@@ -53,16 +54,14 @@ const ContactForm: React.FC = () => {
     const uid = useId();
 
     const [values, setValues] = useState<ContactValues>(EMPTY_VALUES);
-    const [touched, setTouched] = useState<Partial<Record<ContactField, boolean>>>({});
+    // The errors currently on screen: set on submit, cleared while typing, re-checked per field on blur.
+    const [errors, setErrors] = useState<ContactErrors>({});
     const [submitted, setSubmitted] = useState(false);
     const [honeypot, setHoneypot] = useState('');
     const [status, setStatus] = useState<Status>('idle');
     const [via, setVia] = useState<SendResult>('sent');
 
-    const errors = useMemo(() => validateContact(values), [values]);
-    // An error is only shown after the field was visited, or after the first submit attempt
-    const errorFor = (field: ContactField) =>
-        touched[field] || submitted ? errors[field] : undefined;
+    const errorFor = (field: ContactField) => errors[field];
 
     const fieldId = (field: ContactField) => `${uid}-${field}`;
 
@@ -70,15 +69,23 @@ const ContactForm: React.FC = () => {
         (field: ContactField) =>
             (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                 setValues((prev) => ({ ...prev, [field]: e.target.value }));
+                // Hide this field's error as soon as the user starts typing; it is re-checked on blur
+                setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
                 if (status === 'error') setStatus('idle');
             };
 
-    const handleBlur = (field: ContactField) => () =>
-        setTouched((prev) => ({ ...prev, [field]: true }));
+    // Before the first submit nothing is validated. After it, a field re-validates when it loses focus.
+    const handleBlur =
+        (field: ContactField) =>
+            (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                if (!submitted) return;
+                const fieldError = validateContact({ ...values, [field]: e.target.value })[field];
+                setErrors((prev) => ({ ...prev, [field]: fieldError }));
+            };
 
     const reset = () => {
         setValues(EMPTY_VALUES);
-        setTouched({});
+        setErrors({});
         setSubmitted(false);
         setStatus('idle');
     };
@@ -86,9 +93,13 @@ const ContactForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (status === 'submitting') return;
+
+        // Validate everything on submit and show all the errors at once
+        const found = validateContact(values);
+        setErrors(found);
         setSubmitted(true);
 
-        const firstInvalid = FIELD_ORDER.find((field) => errors[field]);
+        const firstInvalid = FIELD_ORDER.find((field) => found[field]);
         if (firstInvalid) {
             document.getElementById(fieldId(firstInvalid))?.focus();
             return;
@@ -252,8 +263,8 @@ const ContactForm: React.FC = () => {
                                     <span
                                         aria-hidden
                                         className={`pointer-events-none absolute bottom-2 right-4 font-mono text-[10px] ${values.message.length > MESSAGE_MAX
-                                                ? 'text-destructive'
-                                                : 'text-muted-foreground'
+                                            ? 'text-destructive'
+                                            : 'text-muted-foreground'
                                             }`}
                                     >
                                         {values.message.length}/{MESSAGE_MAX}
@@ -305,7 +316,7 @@ const ContactForm: React.FC = () => {
                             disabled={submitting}
                             whileHover={reduce || submitting ? undefined : { scale: 1.01 }}
                             whileTap={reduce || submitting ? undefined : { scale: 0.98 }}
-                            className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-80"
+                            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 py-3 px-6 cursor-pointer transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-80"
                         >
                             {submitting ? (
                                 <>

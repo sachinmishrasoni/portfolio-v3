@@ -74,7 +74,7 @@ const ContactInfo: React.FC = () => {
                         <a
                             href={href}
                             {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
-                            className="group flex items-center justify-between rounded-2xl border border-border bg-card/60 px-5 py-4 text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:max-w-md"
+                            className="group flex items-center justify-between rounded-xl border border-border bg-card/60 px-5 py-4 text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:max-w-md"
                         >
                             <span className="flex items-center gap-4">
                                 <Icon className="size-4.5 text-primary" aria-hidden />

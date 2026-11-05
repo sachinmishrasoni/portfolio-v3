@@ -13,8 +13,8 @@ import { FiDownload } from "react-icons/fi";
 import { CgMenuRight } from "react-icons/cg";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import MobileMenu from "./MobileMenu";
+import Portrait from "../ui/portrait";
 
 const navItems = [
     { label: "About", href: "#about" },
@@ -115,10 +115,7 @@ const Header = () => {
                     className="absolute inset-0 -z-10 rounded-[inherit] border border-border bg-background/60 shadow-[0_8px_32px_rgba(0,0,0,0.25)] backdrop-blur-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.45)]"
                 />
                 <div className="flex items-center gap-1">
-                    {/* <Avatar>
-                        <AvatarImage src="/images/avatar.jpg" alt="Sam" className="rounded-full" />
-                        <AvatarFallback>SM</AvatarFallback>
-                    </Avatar> */}
+                    <Portrait name="Sachin Mishra Soni" src="/images/avatar.jpg" size="sm" />
                     <a href="#home" className="font-heading text-xl font-bold">
                         SAM
                     </a>
@@ -158,7 +155,8 @@ const Header = () => {
                     <Button
                         size="icon"
                         variant="outline"
-                        className="hover:border-primary dark:hover:border-primary"
+                        // className="hover:border-primary dark:hover:border-primary"
+                        className="size-9 !hover:border-indigo-400/50"
                         onClick={toggleTheme}
                         disabled={!mounted}
                     >
@@ -180,9 +178,9 @@ const Header = () => {
                         Resume
                     </Button>
 
-                    <Button size="icon" variant="outline" 
-                    className="flex md:hidden"
-                    onClick={() => setMenuOpen(true)}
+                    <Button size="icon" variant="outline"
+                        className="flex md:hidden"
+                        onClick={() => setMenuOpen(true)}
                     >
                         <CgMenuRight />
                     </Button>

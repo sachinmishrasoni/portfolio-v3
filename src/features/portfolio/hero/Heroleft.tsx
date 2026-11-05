@@ -150,7 +150,7 @@ const HeroLeft: React.FC = () => {
                         aria-label={label}
                         whileHover={reduce ? undefined : { y: -3 }}
                         whileTap={reduce ? undefined : { scale: 0.95 }}
-                        className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-background text-muted-foreground transition-colors hover:border-indigo-400/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-indigo-400"
+                        className="flex size-10 items-center justify-center rounded-lg border border-white/10 bg-background text-muted-foreground transition-colors hover:border-indigo-400/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-indigo-400"
                     >
                         <Icon className="size-4.5" />
                     </motion.a>
