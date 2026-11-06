@@ -36,7 +36,7 @@ const SkillCard: React.FC<{ skill: Skill }> = ({ skill }) => {
                 <div className="flex items-center justify-between">
                     <span
                         style={skill.color ? { color: skill.color } : undefined}
-                        className="flex size-10 items-center justify-center rounded-xl border border-border bg-background/70 text-xl text-foreground transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
+                        className="flex size-10 items-center justify-center rounded-lg border border-border bg-background/70 text-xl text-foreground transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
                     >
                         <Icon aria-hidden />
                     </span>
