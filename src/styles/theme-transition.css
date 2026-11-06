@@ -1,0 +1,40 @@
+/*
+  Smooth light/dark switching. Import once, after the Tailwind imports in globals.css:
+      @import "./theme-transition.css";   (adjust the path to where you put this file)
+
+  1) Browsers with the View Transitions API: useThemeTransition.ts animates a circular reveal
+     that grows from the toggle button.
+  2) Other browsers: `theme-switching` is put on <html> for about half a second, so colours
+     fade instead of snapping. It is never on the rest of the time, so it can't slow down your
+     hover and motion animations.
+*/
+
+/* Turn off the browser's default cross-fade; the reveal animation is done in JS */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+/* The new theme sits on top and is revealed by the growing circle */
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 2147483646;
+}
+
+/* Fallback fade */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+    transition:
+        background-color 400ms ease,
+        color 400ms ease,
+        border-color 400ms ease,
+        fill 400ms ease,
+        stroke 400ms ease,
+        box-shadow 400ms ease !important;
+}

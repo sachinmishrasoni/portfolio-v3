@@ -1,49 +1,37 @@
+'use client';
 
-"use client";
+import React from 'react';
+import { FiMoon, FiSun } from 'react-icons/fi';
+import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { Button } from '@/components/ui/button';
+import { useThemeTransition } from '@/hooks/useThemeTransition';
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import { Button } from "../ui/button";
+const ThemeToggle: React.FC<{ className?: string }> = ({ className }) => {
+    const { resolvedTheme, switchTheme } = useThemeTransition();
 
-export default function ThemeToggle() {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!mounted) {
-        return (
-            <button
-                type="button"
-                aria-label="Theme settings"
-                className="size-10 rounded-full border border-border"
-            />
-        );
-    }
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        // Always start the reveal from the middle of the button (also right for keyboard users)
+        const rect = e.currentTarget.getBoundingClientRect();
+        switchTheme(resolvedTheme === 'dark' ? 'light' : 'dark', {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+        });
+    };
 
     return (
-        <div className="flex items-center gap-1 rounded-full border border-border p-1">
-            {[
-                { value: "light", label: "Light" },
-                { value: "dark", label: "Dark" },
-                { value: "system", label: "System" },
-            ].map((option) => (
-                <Button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setTheme(option.value)}
-                    aria-pressed={theme === option.value}
-                    // className={`rounded-full px-3 py-2 text-sm transition-colors ${theme === option.value
-                    //         ? "bg-primary text-white"
-                    //         : "text-muted hover:bg-surface hover:text-foreground"
-                    //     }`}
-                    variant={theme === option.value ? "default" : "secondary"}
-                >
-                    {option.label}
-                </Button>
-            ))}
-        </div>
+        <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            onClick={handleClick}
+            aria-label="Toggle theme"
+            className={className}
+        >
+            {/* Both icons are rendered and `dark:` picks one in CSS, so there is no flash before hydration */}
+            <MdOutlineLightMode className="hidden size-4 dark:block" />
+            <MdOutlineDarkMode className="size-4 dark:hidden" />
+        </Button>
     );
-}
+};
+
+export default ThemeToggle;

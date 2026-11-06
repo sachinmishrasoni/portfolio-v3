@@ -8,13 +8,13 @@ import {
     useScroll,
 } from "motion/react";
 import { useTheme } from "next-themes";
-import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { FiDownload } from "react-icons/fi";
 import { CgMenuRight } from "react-icons/cg";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import MobileMenu from "./MobileMenu";
 import Portrait from "../ui/portrait";
+import ThemeToggle from "../common/ThemeToggle";
 
 const navItems = [
     { label: "About", href: "#about" },
@@ -152,11 +152,11 @@ const Header = () => {
                 </ul>
 
                 <div className="flex items-center gap-2">
-                    <Button
+                    {/* <Button
                         size="icon"
                         variant="outline"
-                        // className="hover:border-primary dark:hover:border-primary"
-                        className="size-9 !hover:border-indigo-400/50"
+                        className="hover:border-primary dark:hover:border-primary"
+                        // className="size-8 hover:border-indigo-400/50"
                         onClick={toggleTheme}
                         disabled={!mounted}
                     >
@@ -165,7 +165,9 @@ const Header = () => {
                         ) : (
                             <span className="size-4" />
                         )}
-                    </Button>
+                    </Button> */}
+
+                    <ThemeToggle />
 
                     <Button
                         variant="secondary"

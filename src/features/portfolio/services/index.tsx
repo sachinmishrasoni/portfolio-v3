@@ -7,7 +7,7 @@ import { SERVICES } from './services.data';
 
 const ServicesSection: React.FC = () => (
     <section id="services" data-testid="services-section" className="relative py-24 lg:py-32">
-        <div className="mx-auto w-full max-w-7xl px-6">
+        <div className="mx-auto w-full max-w-7xl px-4 lg:px-6">
             <SectionHeader
                 index="05"
                 label="Services"
