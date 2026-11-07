@@ -126,7 +126,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onOpenChange }) => {
                     </nav>
 
                     {/* Bottom bar: socials + location */}
-                    <div className="flex shrink-0 items-center justify-between gap-4 border-t border-border px-6 py-6">
+                    <div className="flex shrink-0 items-center justify-between gap-4 border-t border-border p-4">
                         <ul className="flex items-center gap-3">
                             {CONTACT_LINKS.map(({ id, label, href, icon: Icon, external }) => (
                                 <li key={id}>
@@ -134,7 +134,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onOpenChange }) => {
                                         href={href}
                                         aria-label={label}
                                         {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
-                                        className="flex size-9 items-center justify-center rounded-lg border border-border bg-card/60 text-sm text-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                                        className="flex size-8 items-center justify-center rounded-lg border border-border bg-card/60 text-sm text-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                                     >
                                         <Icon aria-hidden />
                                     </a>

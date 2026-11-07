@@ -6,6 +6,7 @@ import ThemeProvider from "@/providers/ThemeProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { SITE_CONFIG } from "@/config/site.config";
+import Preloader from "@/components/common/Preloader";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <ScrollProgress />
           <Header />
+          <Preloader />
           {children}
           <Footer />
         </ThemeProvider>

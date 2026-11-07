@@ -35,12 +35,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
                     <h3 className="mt-4 text-xl font-semibold leading-snug text-foreground">
                         {service.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                         {service.description}
                     </p>
 
                     {/* Tags pinned to the bottom so cards in a row line up */}
-                    <ul className="mt-auto flex flex-wrap gap-2 pt-6">
+                    <ul className="mt-auto flex flex-wrap gap-2 pt-4">
                         {service.tags.map((tag) => (
                             <li
                                 key={tag}
