@@ -116,8 +116,8 @@ const Header = () => {
                 />
                 <div className="flex items-center gap-1">
                     <Portrait name="Sachin Mishra Soni" src="/images/avatar.jpg" size="sm" />
-                    <a href="#home" className="font-heading text-xl font-bold">
-                        SAM
+                    <a href="#home" className="font-signature text-xl font-bold">
+                        Sam
                     </a>
                 </div>
 

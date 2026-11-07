@@ -41,31 +41,40 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ progress, status = 'loadi
             />
 
             <div role="status" aria-live="polite" className="relative flex flex-col items-center">
-                <span className="sr-only">Loading portfolio</span>
+                <span className="sr-only">Loading the portfolio of Sachin Mishra Soni</span>
 
-                {/* Logo */}
-                <div className="flex items-baseline gap-3" aria-hidden>
-                    <span className="flex overflow-hidden pb-2">
+                {/*
+                  Stacked logo: big nickname, full name underneath. The name row is `w-0 min-w-full`, so it takes
+                  its width from "SAM" and its words spread to line up flush with it at every size.
+                  Everything is sized in em from the text-6xl / text-7xl on this wrapper.
+                */}
+                <div aria-hidden className="inline-flex flex-col items-stretch text-5xl sm:text-6xl">
+                    <span className="flex justify-center overflow-hidden">
                         {'SAM'.split('').map((char, i) => (
                             <motion.span
                                 key={i}
                                 initial={reduce ? false : { y: '110%' }}
                                 animate={{ y: 0 }}
                                 transition={{ delay: 0.1 + i * 0.08, duration: 0.6, ease: EASE }}
-                                className="block text-6xl font-extrabold tracking-tight text-foreground sm:text-7xl"
+                                className="block font-heading text-[1em] font-bold leading-12 tracking-tight text-foreground"
                             >
                                 {char}
                             </motion.span>
                         ))}
                     </span>
-                    <motion.span
-                        initial={reduce ? false : { opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5, duration: 0.5 }}
-                        className="font-mono text-sm uppercase tracking-[0.3em] text-muted-foreground"
-                    >
-                        / Sachin
-                    </motion.span>
+
+                    <span className="mt-0 flex w-0 min-w-full justify-between whitespace-nowrap text-[0.19em] font-medium tracking-wide font-mono text-muted-foreground">
+                        {['Sachin', 'Mishra', 'Soni'].map((word, i) => (
+                            <motion.span
+                                key={word}
+                                initial={reduce ? false : { opacity: 0, y: 6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.45 + i * 0.1, duration: 0.5, ease: EASE }}
+                            >
+                                {word}
+                            </motion.span>
+                        ))}
+                    </span>
                 </div>
 
                 {/* Bar */}

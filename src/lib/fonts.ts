@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono, Inter, Space_Grotesk } from "next/font/google";
+import localFont from 'next/font/local';
 
 export const spaceGrotesk = Space_Grotesk({
     variable: "--font-space-grotesk",
@@ -20,9 +21,16 @@ export const geistSans = Geist({
     subsets: ["latin"],
 });
 
+const blackSignature = localFont({
+    src: "../../public/fonts/blacksignature.otf",
+    variable: '--font-signature',
+    display: 'swap',
+});
+
 export const fontVariables = [
     spaceGrotesk.variable,
     inter.variable,
     geistMono.variable,
     geistSans.variable,
+    blackSignature.variable
 ].join(" ");

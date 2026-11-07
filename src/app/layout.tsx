@@ -34,9 +34,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
+          <Preloader />
           <ScrollProgress />
           <Header />
-          <Preloader />
           {children}
           <Footer />
         </ThemeProvider>
