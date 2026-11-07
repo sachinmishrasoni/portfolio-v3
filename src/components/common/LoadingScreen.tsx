@@ -33,7 +33,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ progress, status = 'loadi
             {/* Faded grid + soft glow, same language as the rest of the site */}
             <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-50 [background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_70%)]"
+                className="pointer-events-none absolute inset-0 opacity-50 [background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_70%)]"
             />
             <div
                 aria-hidden

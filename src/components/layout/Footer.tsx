@@ -100,6 +100,18 @@ const Footer: React.FC = () => {
                                 </li>
                             ))}
                         </ul>
+
+                        {/* <motion.div
+                            variants={fadeUp}
+                            className="mt-1 flex flex-col items-start gap-1 sm:items-end"
+                        >
+                            <span
+                                aria-hidden="true"
+                                className="font-signature text-xl leading-tight text-primary sm:text-2xl"
+                            >
+                                {FOOTER_NAME}
+                            </span>
+                        </motion.div> */}
                     </motion.div>
                 </div>
 

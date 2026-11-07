@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { fontVariables } from "@/lib/fonts";
 import "../styles/globals.css";
-import ScrollProgress from "@/components/common/ScrollProgress";
 import ThemeProvider from "@/providers/ThemeProvider";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { SITE_CONFIG } from "@/config/site.config";
 import Preloader from "@/components/common/Preloader";
 
@@ -32,13 +29,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fontVariables} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <meta name="theme-color" content="#FAF9FF" />
+      </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <Preloader />
-          <ScrollProgress />
-          <Header />
           {children}
-          <Footer />
         </ThemeProvider>
       </body>
     </html>

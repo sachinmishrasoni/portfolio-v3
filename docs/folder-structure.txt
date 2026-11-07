@@ -314,3 +314,181 @@ my-portfolio/
 ├── tsconfig.json
 ├── vite.config.ts
 └── README.md
+
+
+
+portfolio/
+│
+├── public/
+│   ├── images/
+│   ├── icons/
+│   ├── fonts/
+│   └── resume/
+│
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.ts
+│
+├── src/
+│   │
+│   ├── app/
+│   │   ├── (public)/
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── not-found.tsx
+│   │   │
+│   │   ├── (auth)/
+│   │   │   └── admin/
+│   │   │       └── login/
+│   │   │           └── page.tsx
+│   │   │
+│   │   ├── (admin)/
+│   │   │   └── admin/
+│   │   │       ├── layout.tsx
+│   │   │       ├── page.tsx
+│   │   │       ├── loading.tsx
+│   │   │       │
+│   │   │       ├── profile/
+│   │   │       │   └── page.tsx
+│   │   │       │
+│   │   │       ├── about/
+│   │   │       │   └── page.tsx
+│   │   │       │
+│   │   │       ├── skills/
+│   │   │       │   └── page.tsx
+│   │   │       │
+│   │   │       ├── experience/
+│   │   │       │   └── page.tsx
+│   │   │       │
+│   │   │       ├── education/
+│   │   │       │   └── page.tsx
+│   │   │       │
+│   │   │       ├── projects/
+│   │   │       │   ├── page.tsx
+│   │   │       │   ├── create/
+│   │   │       │   │   └── page.tsx
+│   │   │       │   └── [id]/
+│   │   │       │       └── page.tsx
+│   │   │       │
+│   │   │       ├── messages/
+│   │   │       │   ├── page.tsx
+│   │   │       │   └── [id]/
+│   │   │       │       └── page.tsx
+│   │   │       │
+│   │   │       └── settings/
+│   │   │           └── page.tsx
+│   │   │
+│   │   ├── api/
+│   │   │   └── auth/
+│   │   │       └── [...nextauth]/
+│   │   │           └── route.ts
+│   │   │
+│   │   ├── globals.css
+│   │   └── layout.tsx
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── common/
+│   │   └── providers/
+│   │
+│   ├── features/
+│   │   │
+│   │   ├── portfolio/
+│   │   │   ├── components/
+│   │   │   │   ├── Header.tsx
+│   │   │   │   ├── Footer.tsx
+│   │   │   │   └── PortfolioLayout.tsx
+│   │   │   └── sections/
+│   │   │       ├── Hero/
+│   │   │       ├── About/
+│   │   │       ├── Skills/
+│   │   │       ├── Experience/
+│   │   │       ├── Education/
+│   │   │       ├── Projects/
+│   │   │       └── Contact/
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── components/
+│   │   │   │   ├── AdminSidebar.tsx
+│   │   │   │   ├── AdminHeader.tsx
+│   │   │   │   ├── AdminBreadcrumb.tsx
+│   │   │   │   └── AdminUserMenu.tsx
+│   │   │   ├── config/
+│   │   │   │   └── admin-navigation.ts
+│   │   │   └── types/
+│   │   │       └── admin.types.ts
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── components/
+│   │   │   │   └── LoginForm.tsx
+│   │   │   ├── actions/
+│   │   │   ├── services/
+│   │   │   ├── validations/
+│   │   │   └── types/
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── components/
+│   │   │   ├── actions/
+│   │   │   ├── services/
+│   │   │   ├── validations/
+│   │   │   └── types/
+│   │   │
+│   │   ├── skills/
+│   │   │   ├── components/
+│   │   │   ├── actions/
+│   │   │   ├── services/
+│   │   │   ├── validations/
+│   │   │   └── types/
+│   │   │
+│   │   ├── experience/
+│   │   │   ├── components/
+│   │   │   ├── actions/
+│   │   │   ├── services/
+│   │   │   ├── validations/
+│   │   │   └── types/
+│   │   │
+│   │   ├── education/
+│   │   │   ├── components/
+│   │   │   ├── actions/
+│   │   │   ├── services/
+│   │   │   ├── validations/
+│   │   │   └── types/
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── components/
+│   │   │   ├── actions/
+│   │   │   ├── services/
+│   │   │   ├── validations/
+│   │   │   └── types/
+│   │   │
+│   │   └── messages/
+│   │       ├── components/
+│   │       ├── actions/
+│   │       ├── services/
+│   │       └── types/
+│   │
+│   ├── lib/
+│   │   ├── prisma.ts
+│   │   ├── auth.ts
+│   │   ├── utils.ts
+│   │   └── validations/
+│   │
+│   ├── config/
+│   │   ├── site.config.ts
+│   │   └── navigation.config.ts
+│   │
+│   ├── hooks/
+│   │
+│   ├── types/
+│   │
+│   └── styles/
+│       └── theme-transition.css
+│
+├── .env
+├── .env.example
+├── .gitignore
+├── next.config.ts
+├── package.json
+├── tsconfig.json
+└── README.md

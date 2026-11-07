@@ -1,0 +1,1663 @@
+# Personal Portfolio & Admin Dashboard
+## Technical Architecture and Implementation Documentation
+
+**Project:** Personal Developer Portfolio  
+**Portfolio Owner:** Sachin Mishra Soni  
+**Application Type:** Full-Stack Portfolio with CMS/Admin Dashboard  
+**Architecture:** Feature-Based Architecture (FBA) + Modular Monolith  
+**Framework:** Next.js App Router  
+**Language:** TypeScript  
+**Document Version:** 1.0
+
+---
+
+# 1. Project Overview
+
+## 1.1 Introduction
+
+The objective is to develop a dynamic personal portfolio website with an integrated admin dashboard.
+
+The application will have two primary interfaces:
+
+1. **Public Portfolio:** A website where visitors can explore personal information, technical skills, work experience, education, projects and contact information.
+2. **Admin Dashboard:** A protected management interface where the portfolio owner can create, update, delete, publish and manage portfolio content without modifying frontend source code.
+
+Both interfaces will operate within a single Next.js application and share the same backend and database.
+
+## 1.2 Project Objectives
+
+- Develop a professional personal portfolio.
+- Create a secure admin authentication system.
+- Manage portfolio information dynamically.
+- Implement reusable UI components.
+- Store portfolio data in a centralized database.
+- Manage project images and other media.
+- Receive and manage contact form submissions.
+- Support draft and published content.
+- Maintain a scalable and maintainable codebase.
+- Deploy the application to a production environment.
+
+## 1.3 Scope
+
+### Public Website
+
+- Home
+- About
+- Skills
+- Experience
+- Education
+- Projects
+- Contact
+- Footer
+- SEO metadata
+
+### Admin Dashboard
+
+- Admin Login
+- Dashboard Overview
+- Profile Management
+- About Management
+- Skills Management
+- Experience Management
+- Education Management
+- Projects Management
+- Messages Management
+- Site Settings
+- Account Settings
+
+---
+
+# 2. Technology Stack
+
+| Layer | Technology | Responsibility |
+|---|---|---|
+| Framework | Next.js | Application framework |
+| Routing | App Router | Page and route management |
+| Language | TypeScript | Type safety |
+| Styling | Tailwind CSS v4 | Styling |
+| UI Components | shadcn/ui | Reusable UI components |
+| Animation | Motion | UI animations |
+| Icons | Lucide / React Icons | Icons |
+| Database | PostgreSQL | Persistent data storage |
+| ORM | Prisma | Database access |
+| Authentication | Auth.js | Admin authentication |
+| Validation | Zod | Input validation |
+| Forms | React Hook Form | Form management |
+| Server Logic | Server Actions | Admin mutations |
+| Image Storage | Cloudinary | Image uploads |
+| Deployment | Vercel | Application hosting |
+| Version Control | Git + GitHub | Source management |
+
+## 2.1 Architectural Principles
+
+- Use Server Components by default.
+- Use Client Components only when browser interaction or client-side state is required.
+- Keep database access on the server.
+- Keep business logic outside page components.
+- Use Zod for server-side input validation.
+- Reuse shared UI components.
+- Use one source of truth for portfolio data.
+- Avoid unnecessary API layers.
+- Protect every admin operation with server-side authorization.
+
+---
+
+# 3. High-Level System Architecture
+
+```text
+                    PORTFOLIO APPLICATION
+                             |
+                 Next.js App Router
+                             |
+              +--------------+--------------+
+              |                             |
+        PUBLIC WEBSITE                ADMIN DASHBOARD
+              |                             |
+        Portfolio Pages                Protected Pages
+              |                             |
+        Server Components              Client / Server UI
+              |                             |
+              +--------------+--------------+
+                             |
+                      SERVER LAYER
+                             |
+             +---------------+---------------+
+             |               |               |
+        Authentication   Validation     Business Logic
+             |               |               |
+             +---------------+---------------+
+                             |
+                     Prisma ORM
+                             |
+                      PostgreSQL
+                             |
+                   Persistent Data
+
+       External Services:
+       Cloudinary - Image Storage
+       Vercel - Application Deployment
+```
+
+## 3.1 Application Structure
+
+The project follows a modular monolith approach.
+
+A modular monolith means:
+
+- One Next.js application.
+- One deployment.
+- One primary database.
+- Multiple independent business features.
+- Shared infrastructure and components.
+
+Microservices are not required for this portfolio.
+
+---
+
+# 4. Folder Structure
+
+Recommended project structure:
+
+```text
+portfolio/
+│
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+│
+├── public/
+│   ├── images/
+│   ├── icons/
+│   └── fonts/
+│
+├── src/
+│   │
+│   ├── app/
+│   │   ├── (public)/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── (auth)/
+│   │   │   └── admin/
+│   │   │       └── login/
+│   │   │           └── page.tsx
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── profile/
+│   │   │   │   └── page.tsx
+│   │   │   ├── about/
+│   │   │   │   └── page.tsx
+│   │   │   ├── skills/
+│   │   │   │   └── page.tsx
+│   │   │   ├── experience/
+│   │   │   │   └── page.tsx
+│   │   │   ├── education/
+│   │   │   │   └── page.tsx
+│   │   │   ├── projects/
+│   │   │   │   └── page.tsx
+│   │   │   ├── messages/
+│   │   │   │   └── page.tsx
+│   │   │   └── settings/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── api/
+│   │   │   └── auth/
+│   │   │       └── [...nextauth]/
+│   │   │           └── route.ts
+│   │   │
+│   │   ├── layout.tsx
+│   │   ├── globals.css
+│   │   └── not-found.tsx
+│   │
+│   ├── features/
+│   │   │
+│   │   ├── portfolio/
+│   │   │   ├── components/
+│   │   │   │   ├── Hero.tsx
+│   │   │   │   ├── About.tsx
+│   │   │   │   ├── Skills.tsx
+│   │   │   │   ├── Experience.tsx
+│   │   │   │   ├── Education.tsx
+│   │   │   │   ├── Projects.tsx
+│   │   │   │   ├── Contact.tsx
+│   │   │   │   └── Footer.tsx
+│   │   │   └── portfolio.types.ts
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── components/
+│   │   │   │   ├── AdminSidebar.tsx
+│   │   │   │   ├── AdminHeader.tsx
+│   │   │   │   ├── AdminBreadcrumb.tsx
+│   │   │   │   └── DashboardStats.tsx
+│   │   │   └── admin.types.ts
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── components/
+│   │   │   ├── profile.schema.ts
+│   │   │   ├── profile.service.ts
+│   │   │   └── profile.types.ts
+│   │   │
+│   │   ├── about/
+│   │   │   ├── components/
+│   │   │   ├── about.schema.ts
+│   │   │   ├── about.service.ts
+│   │   │   └── about.types.ts
+│   │   │
+│   │   ├── skills/
+│   │   │   ├── components/
+│   │   │   ├── skills.schema.ts
+│   │   │   ├── skills.service.ts
+│   │   │   └── skills.types.ts
+│   │   │
+│   │   ├── experience/
+│   │   │   ├── components/
+│   │   │   ├── experience.schema.ts
+│   │   │   ├── experience.service.ts
+│   │   │   └── experience.types.ts
+│   │   │
+│   │   ├── education/
+│   │   │   ├── components/
+│   │   │   ├── education.schema.ts
+│   │   │   ├── education.service.ts
+│   │   │   └── education.types.ts
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── components/
+│   │   │   ├── projects.schema.ts
+│   │   │   ├── projects.service.ts
+│   │   │   └── projects.types.ts
+│   │   │
+│   │   └── messages/
+│   │       ├── components/
+│   │       ├── messages.schema.ts
+│   │       ├── messages.service.ts
+│   │       └── messages.types.ts
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   └── layout/
+│   │
+│   ├── providers/
+│   │   ├── AppProviders.tsx
+│   │   └── QueryProvider.tsx
+│   │
+│   ├── hooks/
+│   │
+│   ├── lib/
+│   │   ├── db.ts
+│   │   ├── auth.ts
+│   │   ├── utils.ts
+│   │   └── cloudinary.ts
+│   │
+│   ├── config/
+│   │   ├── site.config.ts
+│   │   └── navigation.config.ts
+│   │
+│   ├── types/
+│   │   └── common.types.ts
+│   │
+│   └── styles/
+│
+├── .env
+├── .env.example
+├── .gitignore
+├── package.json
+└── tsconfig.json
+```
+
+### 4.1 Folder Responsibilities
+
+| Folder | Responsibility |
+|---|---|
+| app | Routes, layouts and route handlers |
+| features | Business modules and feature logic |
+| components/ui | Globally reusable UI primitives |
+| components/layout | Shared layout components |
+| providers | Application-wide React providers |
+| hooks | Shared custom hooks |
+| lib | Database, authentication and integrations |
+| config | Static application configuration |
+| types | Shared TypeScript types |
+| prisma | Database schema and migrations |
+
+### 4.2 Feature Module Convention
+
+Example:
+
+```text
+features/projects/
+├── components/
+│   ├── ProjectList.tsx
+│   ├── ProjectCard.tsx
+│   ├── ProjectForm.tsx
+│   ├── ProjectDetails.tsx
+│   └── ProjectDeleteDialog.tsx
+│
+├── projects.schema.ts
+├── projects.service.ts
+└── projects.types.ts
+```
+
+Responsibilities:
+
+- Components: UI and user interaction.
+- Schema: Zod validation rules.
+- Service: Server-side business logic and database operations.
+- Types: TypeScript definitions.
+
+Database operations must never be exposed directly to client components.
+
+---
+
+# 5. Routing Architecture
+
+## 5.1 Public Routes
+
+| Route | Page |
+|---|---|
+| / | Portfolio Home |
+
+The public portfolio can be a single-page website with section navigation.
+
+Sections:
+
+- #home
+- #about
+- #skills
+- #experience
+- #education
+- #projects
+- #contact
+
+## 5.2 Admin Routes
+
+| Route | Purpose |
+|---|---|
+| /admin/login | Admin login |
+| /admin | Dashboard overview |
+| /admin/profile | Profile management |
+| /admin/about | About section management |
+| /admin/skills | Skills management |
+| /admin/experience | Experience management |
+| /admin/education | Education management |
+| /admin/projects | Project management |
+| /admin/messages | Contact submissions |
+| /admin/settings | Application settings |
+
+## 5.3 Layout Separation
+
+The public and admin interfaces should have independent layouts.
+
+**Public Layout:**
+- Portfolio navigation
+- Public page content
+- Footer
+- Theme provider
+
+**Admin Layout:**
+- Admin sidebar
+- Admin header
+- Breadcrumbs
+- Main content area
+- Protected navigation
+
+The login page should use a separate authentication layout without the admin sidebar.
+
+---
+
+# 6. Admin Dashboard Modules
+
+## 6.1 Dashboard Overview
+
+Purpose: Provide a summary of the portfolio's content and recent activity.
+
+Components:
+
+- Total projects
+- Published projects
+- Total skills
+- Experience entries
+- Education entries
+- Total messages
+- Unread messages
+- Recent messages
+- Recent content updates
+
+Suggested dashboard cards:
+
+| Card | Data |
+|---|---|
+| Projects | Total project count |
+| Skills | Total skill count |
+| Experience | Total experience records |
+| Education | Total education records |
+| Messages | Total received messages |
+| Unread | Unread message count |
+
+Dashboard statistics should be calculated from database records.
+
+## 6.2 Profile Management
+
+Purpose: Manage the owner's personal and professional information.
+
+Fields:
+
+| Field | Type | Required |
+|---|---|---|
+| Full Name | String | Yes |
+| Designation | String | Yes |
+| Email | String | Yes |
+| Phone | String | No |
+| Short Introduction | Text | Yes |
+| Profile Image | URL | No |
+| Resume URL | URL | No |
+| City | String | No |
+| State | String | No |
+| Country | String | No |
+| GitHub URL | URL | No |
+| LinkedIn URL | URL | No |
+| Other Social Links | URL | No |
+
+Profile data should be the single source of truth for the hero section, footer and contact information.
+
+## 6.3 About Management
+
+Purpose: Manage the detailed biography and introduction displayed on the portfolio.
+
+Fields:
+
+- Heading
+- Introduction
+- Detailed description
+- Highlights
+- Optional statistics
+- Display visibility
+
+Do not duplicate the same profile information in multiple database records unnecessarily.
+
+## 6.4 Skills Management
+
+Purpose: Manage technical skills and categories.
+
+Fields:
+
+| Field | Description |
+|---|---|
+| Skill Name | React, TypeScript, Node.js |
+| Category | Frontend, Backend, Database, Tools |
+| Icon | Icon identifier or image URL |
+| Proficiency | Optional level |
+| Display Order | Position in portfolio |
+| Is Active | Visibility status |
+
+Example categories:
+
+- Frontend Development
+- Backend Development
+- Programming Languages
+- Databases
+- Cloud and DevOps
+- Development Tools
+
+CRUD operations:
+
+- Create skill
+- View skills
+- Update skill
+- Delete skill
+- Reorder skills
+- Enable or disable skill
+
+## 6.5 Experience Management
+
+Purpose: Maintain professional experience.
+
+Fields:
+
+- Company Name
+- Job Title
+- Employment Type
+- Location
+- Start Date
+- End Date
+- Currently Working
+- Description
+- Responsibilities
+- Technologies
+- Display Order
+- Visibility
+
+Business rules:
+
+- End date is optional for current employment.
+- Current employment should not require an end date.
+- Display experiences in the intended chronological order.
+- Validate date ranges.
+
+## 6.6 Education Management
+
+Purpose: Manage educational qualifications.
+
+Fields:
+
+- Institution Name
+- Degree
+- Field of Study
+- Start Date
+- End Date
+- Grade or Percentage
+- Description
+- Location
+- Display Order
+- Visibility
+
+## 6.7 Projects Management
+
+Purpose: Manage portfolio projects dynamically.
+
+Fields:
+
+| Field | Description |
+|---|---|
+| Title | Project name |
+| Slug | Unique URL-friendly identifier |
+| Short Description | Project summary |
+| Full Description | Detailed project information |
+| Thumbnail | Main project image |
+| Gallery | Additional images |
+| Technologies | Associated technology records |
+| GitHub URL | Source code |
+| Live URL | Deployed application |
+| Featured | Featured project flag |
+| Status | Draft or Published |
+| Display Order | Sorting position |
+
+Project statuses:
+
+- DRAFT
+- PUBLISHED
+- ARCHIVED (optional)
+
+Business rules:
+
+1. Only published projects appear publicly.
+2. Draft projects remain visible to authorized admins.
+3. Project slugs must be unique.
+4. Project images should be uploaded to managed storage.
+5. Deleting a project must handle associated technology relationships.
+6. Featured projects should be displayed according to the portfolio design.
+
+## 6.8 Messages Management
+
+Purpose: Manage contact form submissions.
+
+Fields:
+
+- Sender Name
+- Sender Email
+- Subject
+- Message
+- Created Date
+- Read Status
+- Archived Status
+
+Features:
+
+- View messages
+- Open message details
+- Mark as read
+- Mark as unread
+- Archive messages
+- Delete messages
+
+Contact form submissions should be validated and stored server-side.
+
+Add appropriate spam protection and rate limiting.
+
+## 6.9 Settings Management
+
+Purpose: Manage application-level configuration.
+
+Possible settings:
+
+- Website title
+- SEO description
+- SEO keywords
+- Open Graph image
+- Portfolio visibility
+- Contact form availability
+- Social links, if not managed through Profile
+- Default theme preferences
+
+Static technical settings such as database configuration and secrets must not be editable through ordinary portfolio settings.
+
+## 6.10 Account Management
+
+Initial scope:
+
+- Admin profile
+- Change password
+- Sign out
+- Session management
+
+There should be no public admin registration.
+
+---
+
+# 7. Database Architecture
+
+## 7.1 Database Recommendation
+
+Use PostgreSQL with Prisma ORM.
+
+Reasons:
+
+- Structured relational data.
+- Strong TypeScript support through Prisma.
+- Relationships between projects and technologies.
+- Reliable transactions.
+- Easier database migrations.
+- Suitable for a portfolio CMS.
+
+## 7.2 Main Database Entities
+
+| Model | Responsibility |
+|---|---|
+| Admin | Admin account |
+| Profile | Personal profile |
+| About | Biography and highlights |
+| Skill | Technical skills |
+| Experience | Professional experience |
+| Education | Educational records |
+| Project | Portfolio projects |
+| Technology | Reusable technology records |
+| ProjectTechnology | Project-technology relationship |
+| ProjectImage | Project image gallery |
+| Message | Contact form submissions |
+| SiteSetting | Website configuration |
+
+## 7.3 Entity Relationships
+
+```text
+Admin
+  |
+  +---- Authentication / Session
+
+Profile
+  |
+  +---- About
+  |
+  +---- Social Links
+
+Skill
+
+Experience
+
+Education
+
+Project
+  |
+  +---- ProjectImage
+  |
+  +---- ProjectTechnology
+              |
+              +---- Technology
+
+Message
+
+SiteSetting
+```
+
+The initial system can use one admin account. Multi-user administration is not necessary unless the project scope expands.
+
+## 7.4 Example Prisma Schema
+
+The following is a starting schema. It should be validated against the installed Prisma version and the selected Auth.js adapter before generating migrations.
+
+```prisma
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Profile {
+  id           String   @id @default(cuid())
+  fullName     String
+  designation  String
+  email        String
+  phone        String?
+  bio          String   @db.Text
+  profileImage String?
+  resumeUrl    String?
+  city         String?
+  state        String?
+  country      String?
+  githubUrl    String?
+  linkedinUrl  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model About {
+  id          String   @id @default(cuid())
+  heading     String
+  description String   @db.Text
+  highlights  Json?
+  isActive    Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  name        String
+  category    String
+  icon        String?
+  proficiency Int?
+  displayOrder Int     @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Experience {
+  id             String   @id @default(cuid())
+  company        String
+  designation    String
+  employmentType String?
+  location       String?
+  startDate      DateTime
+  endDate        DateTime?
+  isCurrent      Boolean  @default(false)
+  description    String   @db.Text
+  responsibilities Json?
+  displayOrder   Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Education {
+  id           String   @id @default(cuid())
+  institution  String
+  degree       String
+  fieldOfStudy String?
+  startDate    DateTime?
+  endDate      DateTime?
+  grade        String?
+  description  String?  @db.Text
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  shortDescription String @db.Text
+  description    String   @db.Text
+  thumbnail      String?
+  githubUrl      String?
+  liveUrl        String?
+  featured       Boolean  @default(false)
+  status         ContentStatus @default(DRAFT)
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  images         ProjectImage[]
+  technologies   ProjectTechnology[]
+}
+
+model Technology {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  projects  ProjectTechnology[]
+}
+
+model ProjectTechnology {
+  projectId    String
+  technologyId String
+
+  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  technology   Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, technologyId])
+}
+
+model ProjectImage {
+  id        String   @id @default(cuid())
+  projectId String
+  imageUrl  String
+  altText   String?
+  sortOrder Int      @default(0)
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  updatedAt   DateTime @updatedAt
+}
+```
+
+### Important Schema Notes
+
+- Add indexes for frequently queried fields.
+- Add appropriate unique constraints.
+- Use transactions for related updates.
+- Add audit fields if content history becomes necessary.
+- Configure authentication adapter models if required by the selected Auth.js setup.
+- Store only image URLs and provider identifiers in PostgreSQL, not image binary data.
+- Consider a dedicated SocialLink model if social links need flexible ordering and multiple platforms.
+
+---
+
+# 8. Authentication and Authorization
+
+## 8.1 Authentication Strategy
+
+Use Auth.js for admin authentication.
+
+Initial requirements:
+
+- One admin account.
+- Email/password credentials or another supported secure provider.
+- No public registration.
+- Secure session handling.
+- Logout functionality.
+
+For credentials-based authentication, store password hashes using a suitable password-hashing algorithm such as Argon2id or bcrypt. Never store plain-text passwords.
+
+## 8.2 Authentication Flow
+
+```text
+Admin visits /admin
+        |
+Check existing session
+        |
+   +----+----+
+   |         |
+Valid       Invalid
+   |         |
+Dashboard   Login Page
+   |         |
+   |      Submit Credentials
+   |         |
+   |      Verify Password
+   |         |
+   |      Create Session
+   |         |
+   +----> Dashboard
+```
+
+## 8.3 Authorization Rules
+
+Every protected server operation must:
+
+1. Verify the session.
+2. Confirm the user is authorized.
+3. Validate incoming data.
+4. Execute the business operation.
+5. Return a safe result.
+
+Do not rely only on middleware or frontend route hiding.
+
+Server Actions must perform their own authorization checks because they can be invoked independently of the page UI.
+
+## 8.4 Security Requirements
+
+- No public registration.
+- Password hashing.
+- Secure HTTP-only session cookies.
+- Production HTTPS.
+- Server-side authorization.
+- Login rate limiting.
+- Input validation.
+- Protection against unauthorized mutations.
+- Secure environment variables.
+- Safe error responses.
+- Spam protection for contact forms.
+- Regular dependency updates.
+
+---
+
+# 9. Backend Architecture
+
+## 9.1 Service Layer
+
+Each business feature should contain its own service file.
+
+Example:
+
+```text
+features/projects/
+├── projects.schema.ts
+├── projects.service.ts
+└── projects.types.ts
+```
+
+The service layer handles:
+
+- Database queries.
+- Business rules.
+- Create operations.
+- Update operations.
+- Delete operations.
+- Publishing rules.
+- Data retrieval.
+
+## 9.2 Server Actions
+
+Server Actions are recommended for most admin CRUD mutations.
+
+Example workflow:
+
+```text
+Project Form
+     |
+     v
+Server Action
+     |
+     v
+Authentication Check
+     |
+     v
+Zod Validation
+     |
+     v
+Project Service
+     |
+     v
+Prisma
+     |
+     v
+PostgreSQL
+     |
+     v
+Revalidate Cached Data
+```
+
+Example conceptual Server Action:
+
+```ts
+"use server";
+
+export async function createProject(input: unknown) {
+  const session = await auth();
+
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedData = projectSchema.parse(input);
+
+  return createProjectService(validatedData);
+}
+```
+
+This is a simplified illustration. The production implementation should also verify admin permissions, handle errors safely and avoid trusting client-provided ownership or authorization fields.
+
+## 9.3 Route Handlers
+
+Use Route Handlers when required for:
+
+- External API consumers.
+- Webhooks.
+- Integrations.
+- File upload callbacks.
+- Public endpoints.
+- Services that need standard HTTP interfaces.
+
+Avoid creating duplicate APIs for operations already handled cleanly through Server Actions.
+
+---
+
+# 10. Frontend and UI Architecture
+
+## 10.1 Design System
+
+Use the existing portfolio design system:
+
+- Primary color: Violet.
+- Dark mode: Deep navy / near-black background.
+- Light mode: White / soft neutral background.
+- Accent: Violet.
+- Border: Subtle neutral border.
+- Typography: Existing portfolio font system.
+
+The admin dashboard can use the same brand colors with a more functional layout.
+
+## 10.2 Admin Layout
+
+Components:
+
+- AdminSidebar
+- AdminHeader
+- AdminBreadcrumb
+- AdminPageHeader
+- AdminContent
+- UserMenu
+- ThemeToggle
+
+## 10.3 Reusable UI Components
+
+Create reusable components for:
+
+### Form Elements
+
+- Input
+- Textarea
+- Select
+- MultiSelect
+- DatePicker
+- Checkbox
+- Switch
+- FileUpload
+
+### Data Display
+
+- DataTable
+- StatusBadge
+- EmptyState
+- LoadingState
+- Pagination
+- SearchInput
+
+### Interactions
+
+- ConfirmDialog
+- DeleteDialog
+- FormModal
+- DropdownMenu
+- Toast
+- Tabs
+
+### Dashboard
+
+- StatCard
+- RecentActivity
+- RecentMessages
+- QuickAction
+
+Do not create every component in advance. Build shared components when repeated requirements appear.
+
+---
+
+# 11. Admin CRUD Workflow
+
+Every management module should follow a consistent workflow.
+
+## 11.1 Create
+
+1. Admin opens the module.
+2. Admin selects Add New.
+3. Form opens.
+4. Admin enters information.
+5. Client-side validation provides immediate feedback.
+6. Server Action validates again.
+7. Service saves data through Prisma.
+8. UI refreshes or revalidates the relevant data.
+9. Success or error feedback is shown.
+
+## 11.2 Read
+
+- Display records in a table or card layout.
+- Support search.
+- Support filtering.
+- Support pagination where necessary.
+- Provide detail views when appropriate.
+
+## 11.3 Update
+
+- Load existing record.
+- Populate the form.
+- Validate modified values.
+- Save changes.
+- Refresh affected public and admin views.
+
+## 11.4 Delete
+
+- Display a confirmation dialog.
+- Verify admin authorization.
+- Perform the delete operation.
+- Handle related records.
+- Refresh the listing.
+
+For important records, consider soft deletion or archival rather than permanent deletion.
+
+---
+
+# 12. Public Portfolio Integration
+
+The public website must read portfolio content from the database.
+
+## 12.1 Data Flow
+
+```text
+Admin Dashboard
+       |
+       v
+Create / Update Content
+       |
+       v
+PostgreSQL
+       |
+       v
+Public Server Components
+       |
+       v
+Portfolio Sections
+```
+
+## 12.2 Data Mapping
+
+| Public Section | Database Source |
+|---|---|
+| Hero | Profile |
+| About | About + Profile |
+| Skills | Skill |
+| Experience | Experience |
+| Education | Education |
+| Projects | Project + Technology |
+| Contact | Profile + Message |
+| Footer | Profile |
+
+## 12.3 Publishing Rules
+
+- Only published projects should appear publicly.
+- Inactive skills should not appear.
+- Hidden experience records should not appear.
+- Hidden education records should not appear.
+- Archived content should remain excluded from public listings.
+
+## 12.4 Caching and Revalidation
+
+When an admin changes content:
+
+1. Save the updated record.
+2. Revalidate the relevant portfolio page or data cache.
+3. Ensure the public page displays the updated content.
+
+Use Next.js caching and revalidation APIs according to the data-fetching approach. Avoid assuming every database query should be cached indefinitely.
+
+---
+
+# 13. Image Management
+
+## 13.1 Storage Strategy
+
+Use Cloudinary for:
+
+- Profile images.
+- Project thumbnails.
+- Project galleries.
+- Optional company or institution logos.
+
+## 13.2 Upload Workflow
+
+```text
+Admin Selects Image
+        |
+        v
+Validate File Type and Size
+        |
+        v
+Authorized Upload
+        |
+        v
+Cloudinary
+        |
+        v
+Receive Secure URL and Asset ID
+        |
+        v
+Save Image Metadata in Database
+```
+
+## 13.3 Image Requirements
+
+- Validate image MIME type.
+- Restrict file size.
+- Use supported image formats.
+- Generate optimized image variants.
+- Provide alt text.
+- Avoid storing image binary data in PostgreSQL.
+- Remove unused assets when appropriate.
+
+Use signed or authenticated uploads where necessary. Never expose private Cloudinary API secrets to browser code.
+
+---
+
+# 14. Contact Form Architecture
+
+## 14.1 Contact Submission Flow
+
+```text
+Visitor Opens Contact Section
+          |
+          v
+Enters Contact Information
+          |
+          v
+Client Validation
+          |
+          v
+Server Validation
+          |
+          v
+Spam / Rate Limit Checks
+          |
+          v
+Save Message
+          |
+          v
+Admin Messages Dashboard
+```
+
+## 14.2 Message Management
+
+The admin can:
+
+- View all messages.
+- Search messages.
+- Read message details.
+- Mark as read.
+- Mark as unread.
+- Archive messages.
+- Delete messages.
+
+Optional future enhancement: Email notifications for new submissions.
+
+---
+
+# 15. Configuration and Environment Variables
+
+## 15.1 Static Site Configuration
+
+`src/config/site.config.ts` should contain static application-level information.
+
+Examples:
+
+- Site title.
+- Site description.
+- Public website URL.
+- Locale.
+- Language.
+- Default SEO configuration.
+
+Do not duplicate database-managed profile information in static configuration.
+
+## 15.2 Environment Variables
+
+Example `.env.example`:
+
+```env
+DATABASE_URL=""
+
+AUTH_SECRET=""
+
+NEXT_PUBLIC_SITE_URL="https://portfolio-v3-sage-beta.vercel.app"
+
+CLOUDINARY_CLOUD_NAME=""
+CLOUDINARY_API_KEY=""
+CLOUDINARY_API_SECRET=""
+```
+
+The actual `.env` file must remain private and must never be committed to Git.
+
+Variables containing credentials must not use the `NEXT_PUBLIC_` prefix.
+
+Use the exact environment variables required by the installed versions of Auth.js, Prisma and Cloudinary integrations.
+
+---
+
+# 16. Error Handling and User Experience
+
+Every module should handle:
+
+- Loading state.
+- Empty state.
+- Validation errors.
+- Unauthorized access.
+- Database errors.
+- Network failures.
+- Successful mutations.
+- Missing records.
+- Invalid image uploads.
+
+Recommended UX behavior:
+
+| Situation | Expected UI |
+|---|---|
+| Loading | Skeleton or spinner |
+| No records | Helpful empty state |
+| Validation error | Field-level message |
+| Save success | Success toast |
+| Save failure | Error message |
+| Unauthorized | Redirect or access denied |
+| Delete | Confirmation dialog |
+| Not found | Not-found state |
+
+Never expose raw database errors, stack traces or sensitive server information to users.
+
+---
+
+# 17. Performance and SEO
+
+## 17.1 Performance
+
+- Prefer Server Components for public sections.
+- Use optimized images.
+- Avoid unnecessary client-side JavaScript.
+- Lazy-load non-critical content.
+- Avoid unnecessary animation.
+- Paginate large admin tables.
+- Add appropriate database indexes.
+- Avoid repeated database queries.
+- Use caching selectively.
+
+## 17.2 SEO
+
+Manage:
+
+- Page title.
+- Meta description.
+- Open Graph metadata.
+- Social sharing image.
+- Canonical URL.
+- Sitemap.
+- Robots configuration.
+- Semantic headings.
+- Image alt text.
+
+Use Next.js Metadata API for SEO.
+
+The public portfolio should be accessible to search engines, while admin routes should be protected and excluded from indexing.
+
+---
+
+# 18. Deployment Architecture
+
+## 18.1 Recommended Hosting
+
+| Component | Hosting |
+|---|---|
+| Next.js Application | Vercel |
+| PostgreSQL | Managed PostgreSQL provider |
+| Image Storage | Cloudinary |
+| Source Code | GitHub |
+| Environment Variables | Vercel Project Settings |
+
+## 18.2 Deployment Workflow
+
+```text
+Local Development
+       |
+       v
+Git Commit
+       |
+       v
+GitHub Push
+       |
+       v
+Vercel Build
+       |
+       v
+Production Deployment
+       |
+       v
+Portfolio + Admin Dashboard
+```
+
+## 18.3 Production Checklist
+
+- Configure production database.
+- Configure production environment variables.
+- Run database migrations.
+- Configure authentication URLs and secrets.
+- Configure Cloudinary credentials.
+- Test admin login.
+- Test protected routes.
+- Test every CRUD operation.
+- Test public content visibility.
+- Test contact form submissions.
+- Test responsive layouts.
+- Test dark and light themes.
+- Verify error handling.
+- Verify SEO metadata.
+- Verify backups and recovery options.
+
+Never use destructive development database reset commands against production data.
+
+---
+
+# 19. Implementation Roadmap
+
+The implementation should be completed in phases.
+
+## Phase 1: Project Foundation
+
+- Review existing Next.js project.
+- Finalize folder architecture.
+- Configure environment variables.
+- Configure PostgreSQL.
+- Install and configure Prisma.
+- Create initial database schema.
+- Run migrations.
+
+**Deliverable:** Working database connection and initial schema.
+
+## Phase 2: Authentication
+
+- Configure Auth.js.
+- Create admin login page.
+- Create initial admin account securely.
+- Configure session handling.
+- Protect admin routes.
+- Protect Server Actions.
+
+**Deliverable:** Secure admin login and protected dashboard routes.
+
+## Phase 3: Admin UI Foundation
+
+- Create Admin Layout.
+- Create Sidebar.
+- Create Header.
+- Create Breadcrumb.
+- Create reusable form controls.
+- Create reusable table.
+- Create confirmation dialogs.
+- Create loading and empty states.
+
+**Deliverable:** Functional admin layout.
+
+## Phase 4: Dashboard
+
+- Implement dashboard statistics.
+- Implement recent projects.
+- Implement recent messages.
+- Implement recent activity if activity tracking is added.
+
+**Deliverable:** Admin dashboard overview.
+
+## Phase 5: Content Management
+
+Implement modules in this order:
+
+1. Profile.
+2. About.
+3. Skills.
+4. Experience.
+5. Education.
+6. Projects.
+7. Messages.
+8. Settings.
+
+Each module should include validation, server-side authorization and appropriate CRUD operations.
+
+**Deliverable:** Fully functional content management.
+
+## Phase 6: Image Management
+
+- Configure Cloudinary.
+- Build reusable upload component.
+- Add image validation.
+- Connect profile image uploads.
+- Connect project thumbnails.
+- Connect project gallery.
+
+**Deliverable:** Managed image storage.
+
+## Phase 7: Public Integration
+
+- Connect Hero with Profile.
+- Connect About with database.
+- Connect Skills.
+- Connect Experience.
+- Connect Education.
+- Connect Projects.
+- Connect Contact.
+- Connect Footer.
+
+**Deliverable:** Fully dynamic portfolio.
+
+## Phase 8: Testing and Production
+
+- Test authentication.
+- Test authorization.
+- Test CRUD.
+- Test mobile responsiveness.
+- Test theme switching.
+- Test SEO.
+- Test performance.
+- Deploy to Vercel.
+- Verify production behavior.
+
+**Deliverable:** Production-ready portfolio and admin dashboard.
+
+---
+
+# 20. Testing Strategy
+
+## Functional Testing
+
+- Login and logout.
+- Profile updates.
+- Skill creation and editing.
+- Experience management.
+- Education management.
+- Project publishing.
+- Project archiving.
+- Contact message submission.
+- Message management.
+- Settings updates.
+
+## Security Testing
+
+- Unauthorized access to `/admin`.
+- Unauthorized Server Action calls.
+- Invalid session.
+- Invalid form input.
+- Malicious input.
+- Contact form spam.
+- Upload restrictions.
+- Secret exposure checks.
+
+## UI Testing
+
+- Desktop layout.
+- Tablet layout.
+- Mobile layout.
+- Dark mode.
+- Light mode.
+- Loading states.
+- Empty states.
+- Validation messages.
+- Accessibility.
+
+---
+
+# 21. Future Enhancements
+
+The following features are optional and should be implemented only after the core application is stable.
+
+- Blog management.
+- Project case studies.
+- Resume version management.
+- Visitor analytics.
+- Admin activity logs.
+- Email notifications.
+- Content revision history.
+- Scheduled publishing.
+- Multi-admin support.
+- Role-based permissions.
+- Portfolio preview before publishing.
+- Advanced SEO management.
+- Automated backups.
+
+---
+
+# 22. Final Architectural Decisions
+
+| Area | Decision |
+|---|---|
+| Application | Single Next.js application |
+| Architecture | Feature-Based Modular Monolith |
+| Public Interface | Next.js Server Components by default |
+| Admin Interface | Protected Next.js routes |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Authentication | Auth.js |
+| Validation | Zod |
+| Forms | React Hook Form |
+| Mutations | Server Actions by default |
+| External APIs | Route Handlers when required |
+| Media | Cloudinary |
+| UI | Tailwind CSS v4 + shadcn/ui |
+| Deployment | Vercel |
+
+## Final Recommendation
+
+Build the portfolio and admin dashboard in the same repository and use a centralized database as the source of truth.
+
+Do not start by building all admin screens. Establish the database and authentication foundation first, then implement the admin layout and individual content modules.
+
+The first complete milestone should be:
+
+1. Database connected.
+2. Admin login working.
+3. Protected admin dashboard accessible.
+4. Profile information editable.
+5. Updated profile automatically reflected on the public portfolio.
+
+Once this workflow works end-to-end, use the same architecture for Skills, Experience, Education, Projects and Messages.
+
+**The final goal is a maintainable personal portfolio CMS that allows the owner to manage the entire public portfolio from one secure admin dashboard without repeatedly changing frontend code.**

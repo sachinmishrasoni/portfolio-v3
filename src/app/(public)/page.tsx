@@ -11,19 +11,19 @@ import HeroSectionMarquee from "@/features/portfolio/hero/HeroSectionMarquee";
 import QualitiesMarquee from "@/features/portfolio/CtaSection/QualitiesMarquee";
 
 export default function Home() {
-  return (
-    <main>
-      <HeroSection />
-      <HeroSectionMarquee />
-      <AboutSection />
-      <SkillsSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <ServicesSection />
-      <QualitiesMarquee />
-      <CtaSection />
-      <DeveloperProfileSection />
-      <ContactSection />
-    </main>
-  );
+    return (
+        <main>
+            <HeroSection />
+            <HeroSectionMarquee />
+            <AboutSection />
+            <SkillsSection />
+            <ExperienceSection />
+            <ProjectsSection />
+            <ServicesSection />
+            <QualitiesMarquee />
+            <CtaSection />
+            <DeveloperProfileSection />
+            <ContactSection />
+        </main>
+    );
 }
