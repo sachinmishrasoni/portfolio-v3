@@ -5,8 +5,8 @@ import { FiCalendar } from 'react-icons/fi';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import FormField, { describedBy, FloatingLabel } from './FormField';
-import { triggerClass } from './form.styles';
+import FormField, { describedBy } from './FormField';
+import { triggerClass, triggerTextClass } from './form.styles';
 import type { DateFieldProps } from './form.types';
 
 /* --------------------------------- helpers --------------------------------- */
@@ -34,7 +34,14 @@ const displayFormat = new Intl.DateTimeFormat('en-GB', {
 
 /* ---------------------------------- field ---------------------------------- */
 
-/** Date picker built on the shadcn Popover + Calendar, with a floating label. */
+/**
+ * Date picker built on the shadcn Popover + Calendar.
+ *
+ * variant:
+ *  - 'floating' (default): label floats inside the field
+ *  - 'border':             label sits on the top border when open / filled
+ *  - 'top':                label always sits above the field, placeholder always visible
+ */
 const DateField: React.FC<DateFieldProps> = ({
     id,
     name,
@@ -50,12 +57,16 @@ const DateField: React.FC<DateFieldProps> = ({
     className,
     minDate,
     maxDate,
+    variant = 'floating',
 }) => {
     const [open, setOpen] = useState(false);
     const invalid = Boolean(error);
 
     const date = parseDate(value);
+    // Used by 'floating' and 'border'; ignored by 'top' (its label never moves)
     const floated = Boolean(date) || open;
+    // With the label above the field, the placeholder can always be shown
+    const showPlaceholder = open || variant === 'top';
 
     const min = parseDate(minDate);
     const max = parseDate(maxDate);
@@ -76,7 +87,16 @@ const DateField: React.FC<DateFieldProps> = ({
     };
 
     return (
-        <FormField id={id} error={error} hint={hint} className={className}>
+        <FormField
+            id={id}
+            label={label}
+            required={required}
+            variant={variant}
+            floated={floated}
+            error={error}
+            hint={hint}
+            className={className}
+        >
             {/* So the date is submitted with a normal <form> */}
             <input type="hidden" name={name} value={value} />
 
@@ -91,12 +111,23 @@ const DateField: React.FC<DateFieldProps> = ({
                     aria-invalid={invalid}
                     aria-required={required}
                     aria-describedby={describedBy(id, error, hint)}
-                    className={triggerClass(invalid, open)}
+                    className={triggerClass(invalid, open, undefined, variant)}
                 >
-                    <span
+                    {/* <span
                         className={cn('block min-w-0 truncate', !date && 'text-muted-foreground/70')}
                     >
-                        {date ? displayFormat.format(date) : open ? (placeholder ?? '') : ''}
+                        {date
+                            ? displayFormat.format(date)
+                            : showPlaceholder
+                                ? (placeholder ?? '')
+                                : ''}
+                    </span> */}
+                    <span className={cn(triggerTextClass(variant), !date && 'text-muted-foreground/70')}>
+                        {date
+                            ? displayFormat.format(date)
+                            : showPlaceholder
+                                ? (placeholder ?? '')
+                                : ''}
                     </span>
                     <FiCalendar aria-hidden className="size-4 shrink-0 text-muted-foreground" />
                 </PopoverTrigger>
@@ -111,10 +142,6 @@ const DateField: React.FC<DateFieldProps> = ({
                     />
                 </PopoverContent>
             </Popover>
-
-            <FloatingLabel htmlFor={id} required={required} invalid={invalid} floated={floated}>
-                {label}
-            </FloatingLabel>
         </FormField>
     );
 };

@@ -1,38 +1,31 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import FormField, { describedBy, FloatingLabel } from './FormField';
+import FormField, { describedBy } from './FormField';
 import { textareaClass } from './form.styles';
 import type { TextareaFieldProps } from './form.types';
 
-/**
- * Multi-line text input with a floating label.
- * (There is no shadcn textarea in components/ui, so this is a native <textarea> with the same styling.)
- */
 const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(function TextareaField(
     {
-        id,
-        name,
-        label,
-        placeholder,
-        value,
-        onChange,
-        onBlur,
-        required,
-        disabled,
-        error,
-        hint,
-        className,
-        rows = 4,
-        maxLength,
-        showCount = false,
+        id, name, label, placeholder, value, onChange, onBlur, required, disabled,
+        error, hint, className, rows = 4, maxLength, showCount = false,
+        variant = 'floating',
     },
     ref,
 ) {
     const invalid = Boolean(error);
 
     return (
-        <FormField id={id} error={error} hint={hint} className={className}>
+        <FormField
+            id={id}
+            label={label}
+            required={required}
+            variant={variant}
+            multiline
+            error={error}
+            hint={hint}
+            className={className}
+        >
             <textarea
                 ref={ref}
                 id={id}
@@ -47,12 +40,8 @@ const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(functi
                 disabled={disabled}
                 aria-invalid={invalid}
                 aria-describedby={describedBy(id, error, hint)}
-                className={textareaClass(invalid)}
+                className={textareaClass(invalid, undefined, variant)}
             />
-
-            <FloatingLabel htmlFor={id} required={required} invalid={invalid} multiline>
-                {label}
-            </FloatingLabel>
 
             {showCount && maxLength ? (
                 <span

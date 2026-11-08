@@ -1,5 +1,7 @@
 import type { ChangeEventHandler, FocusEventHandler } from 'react';
 
+export type FieldVariant = 'floating' | 'border' | 'top';
+
 /** Props that every field in this folder accepts */
 export type FieldBaseProps = {
     /** Used for the control's `id`, and ties the label, error and hint to it */
@@ -19,6 +21,13 @@ export type FieldBaseProps = {
     hint?: string;
     /** Classes for the outer wrapper, e.g. "sm:col-span-2" */
     className?: string;
+    
+    /**
+     * floating: label floats inside the field (default)
+     * border:   label sits on the top border when focused / filled
+     * top:      label always sits above the field
+     */
+    variant?: FieldVariant;
 };
 
 /* ------------------------------- TextField -------------------------------- */

@@ -3,40 +3,33 @@
 import React, { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import FormField, { describedBy, FloatingLabel } from './FormField';
-import { triggerClass } from './form.styles';
+import FormField, { describedBy } from './FormField';
+import { triggerClass, triggerTextClass } from './form.styles';
 import type { SelectFieldProps } from './form.types';
 
-/**
- * Dropdown built on the shadcn Select, with a floating label.
- *
- * The selected text is rendered here, not with shadcn's <SelectValue>, so it shows the option's
- * label (not its raw value) whichever shadcn flavour (Radix or Base UI) your select.tsx is.
- */
 const SelectField: React.FC<SelectFieldProps> = ({
-    id,
-    name,
-    label,
-    placeholder,
-    options,
-    value,
-    onChange,
-    onBlur,
-    required,
-    disabled,
-    error,
-    hint,
-    className,
+    id, name, label, placeholder, options, value, onChange, onBlur, required,
+    disabled, error, hint, className, variant = 'floating',
 }) => {
     const [open, setOpen] = useState(false);
     const invalid = Boolean(error);
 
     const selected = options.find((option) => option.value === value);
-    // The label floats when something is chosen or the list is open
     const floated = Boolean(selected) || open;
+    // With the label above the field, the placeholder can always be shown
+    const showPlaceholder = open || variant === 'top';
 
     return (
-        <FormField id={id} error={error} hint={hint} className={className}>
+        <FormField
+            id={id}
+            label={label}
+            required={required}
+            variant={variant}
+            floated={floated}
+            error={error}
+            hint={hint}
+            className={className}
+        >
             <Select
                 name={name}
                 value={value}
@@ -48,22 +41,24 @@ const SelectField: React.FC<SelectFieldProps> = ({
             >
                 <SelectTrigger
                     id={id}
-                    // Opening the list moves focus into it, which isn't a real blur; only report it once closed
                     onBlur={(event) => {
                         if (!open) onBlur?.(event);
                     }}
                     aria-invalid={invalid}
                     aria-required={required}
                     aria-describedby={describedBy(id, error, hint)}
-                    className={triggerClass(invalid, open)}
+                    className={triggerClass(invalid, open, undefined, variant)}
                 >
-                    <span
+                    {/* <span
                         className={cn(
                             'block min-w-0 truncate',
                             !selected && 'text-muted-foreground/70',
                         )}
                     >
-                        {selected ? selected.label : open ? (placeholder ?? '') : ''}
+                        {selected ? selected.label : showPlaceholder ? (placeholder ?? '') : ''}
+                    </span> */}
+                    <span className={cn(triggerTextClass(variant), !selected && 'text-muted-foreground/70')}>
+                        {selected ? selected.label : showPlaceholder ? (placeholder ?? '') : ''}
                     </span>
                 </SelectTrigger>
 
@@ -75,10 +70,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
                     ))}
                 </SelectContent>
             </Select>
-
-            <FloatingLabel htmlFor={id} required={required} invalid={invalid} floated={floated}>
-                {label}
-            </FloatingLabel>
         </FormField>
     );
 };
