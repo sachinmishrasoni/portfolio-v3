@@ -1,27 +1,31 @@
-import React from 'react';
-import Link from 'next/link';
-import { FiArrowLeft } from 'react-icons/fi';
+import React from "react";
+import Link from "next/link";
+import { FiArrowLeft } from "react-icons/fi";
+import { redirect } from "next/navigation";
 
-export default function Login() {
+import LoginForm from "@/features/admin/auth/LoginForm";
+import { requireAdmin } from "@/features/admin/auth/require-admin";
+
+// Allow blocking, request-time rendering
+export const instant = false;
+
+export default async function Login() {
+    let isAuthenticated = false;
+
+    try {
+        await requireAdmin();
+        isAuthenticated = true;
+    } catch {
+        isAuthenticated = false;
+    }
+
+    if (isAuthenticated) {
+        redirect("/admin");
+    }
+
     return (
         <div className="relative mx-auto w-full max-w-md">
-
-            {/* Login Card */}
-            <div className="rounded-3xl border border-border bg-card/50 p-6 shadow-2xl shadow-primary/5 backdrop-blur-sm sm:p-8">
-
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                    Welcome Back
-                </h1>
-
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                    Sign in to manage your portfolio.
-                </p>
-
-                <div className="mt-6">
-                    {/* Your Login Form Component */}
-                </div>
-
-            </div>
+            <LoginForm />
 
             {/* Back to Website */}
             <p className="mt-6 text-center">
@@ -33,7 +37,6 @@ export default function Login() {
                     Back to site
                 </Link>
             </p>
-
         </div>
-    )
+    );
 }
