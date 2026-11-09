@@ -3,9 +3,8 @@ import { fontVariables } from "@/lib/fonts";
 import "../styles/globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { SITE_CONFIG } from "@/config/site.config";
-import Preloader from "@/components/common/Preloader";
 import { Toaster } from "@/components/ui/sonner";
-// import { Toaster } from "@/components/ui/toast";
+import SitePreloader from "@/components/common/SitePreloader";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -37,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          {/* <Preloader /> */}
+          <SitePreloader />
           {children}
           <Toaster position="top-right" richColors />
         </ThemeProvider>
