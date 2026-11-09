@@ -8,7 +8,7 @@ import AdminMobileNav from './AdminMobileNav';
 import AdminSidebar from './AdminSidebar';
 import { ADMIN_BASE, type AdminUser } from '@/config/admin.config';
 import { logout } from '@/features/admin/auth/auth.service';
-import { toast } from '@/components/ui/toast';
+import { toast } from 'sonner';
 
 const STORAGE_KEY = 'admin-sidebar-collapsed';
 
@@ -78,10 +78,8 @@ const AdminShell: React.FC<AdminShellProps> = ({ children, user, badges }) => {
 
             router.replace(`${ADMIN_BASE}/login`);
             router.refresh();
-            toast.add({
-                title: 'Sign out successful',
-                description: 'You have successfully signed out.',
-            });
+
+            toast.success("Sign out successful!");
         } catch (error) {
             console.error("Sign out failed:", error);
         }

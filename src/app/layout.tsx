@@ -4,7 +4,8 @@ import "../styles/globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { SITE_CONFIG } from "@/config/site.config";
 import Preloader from "@/components/common/Preloader";
-import { Toaster } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/sonner";
+// import { Toaster } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -38,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <Preloader />
           {children}
-          <Toaster />
+          <Toaster position="top-right" richColors />
         </ThemeProvider>
       </body>
     </html>

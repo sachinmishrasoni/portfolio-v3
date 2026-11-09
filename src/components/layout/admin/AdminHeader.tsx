@@ -10,6 +10,7 @@ import Portrait from '@/components/ui/portrait';
 // Same toggle with the circular theme transition. Adjust the path to where yours lives.
 import ThemeToggle from '@/components/common/ThemeToggle';
 import { ADMIN_BASE, SITE_URL, type AdminUser } from '@/config/admin.config';
+import { CgMenuLeft } from 'react-icons/cg';
 
 /* ---------------------------------- helpers --------------------------------- */
 
@@ -167,7 +168,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
                 aria-label="Open navigation"
                 className={`${iconButton} lg:hidden`}
             >
-                <FiMenu className="size-5" />
+                <CgMenuLeft className="size-5" />
             </button>
 
             {/* Desktop: collapse / expand the sidebar (Ctrl/⌘ + B) */}

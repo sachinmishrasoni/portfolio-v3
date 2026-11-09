@@ -1,36 +1,36 @@
+
 "use client";
 
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FcGoogle } from "react-icons/fc";
-import { FiLoader, FiLock, FiLogIn, FiMail } from "react-icons/fi";
+import { FiLoader, FiLock, FiLogIn } from "react-icons/fi";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/forms";
+import SpotlightCard from "@/components/common/SpotlightCard";
 
 import {
     loginSchema,
     type LoginFormValues,
 } from "./login.schema";
-import SpotlightCard from "@/components/common/SpotlightCard";
-import { loginWithEmail } from "./auth.service";
-import { toast } from "@/components/ui/toast";
-import { useRouter } from "next/navigation";
 
-type LoginFormProps = {
-    onGoogleLogin?: () => void | Promise<void>;
-    onLogin?: (values: LoginFormValues) => void | Promise<void>;
-};
+import { loginWithEmail, loginWithGoogle } from "./auth.service";
+import { useState } from "react";
 
-const LoginForm = ({ onGoogleLogin, onLogin }: LoginFormProps) => {
+
+const LoginForm: React.FC = () => {
     const router = useRouter();
-    const [message, setMessage] = useState("");
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
     const {
         control,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -41,45 +41,67 @@ const LoginForm = ({ onGoogleLogin, onLogin }: LoginFormProps) => {
         reValidateMode: "onBlur",
     });
 
+    // Email and password login
     const handleLogin = async (values: LoginFormValues) => {
-        setMessage("");
+        if (isSubmitting) return;
 
         try {
-            if (true) {
-                // await onLogin(values);
-                // console.log(values);
-                await loginWithEmail(values.email, values.password);
-                toast.add({
-                    title: "Login successful",
-                    description: "You have successfully logged in.",
-                });
-                router.replace("/admin");
-                router.refresh();
-            } else {
-                setMessage("Login form validated. Connect your authentication service to continue.");
-            }
-        } catch {
-            setMessage("Unable to sign in. Please check your credentials and try again.");
+            setIsSubmitting(true);
+            await loginWithEmail(values.email, values.password);
+
+            toast.success("Login successful", {
+                description: "Welcome back! Redirecting to your dashboard.",
+            });
+
+            router.replace("/admin");
+            router.refresh();
+        } catch (error) {
+            console.error("Login failed:", error);
+
+            toast.error("Login failed", {
+                description:
+                    error instanceof Error
+                        ? error.message
+                        : "Invalid email or password. Please try again.",
+            });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
+    // Google login placeholder
     const handleGoogleLogin = async () => {
-        setMessage("");
-
-        if (!onGoogleLogin) {
-            setMessage("Google sign-in is not connected yet.");
-            return;
-        }
+        if (isSubmitting || isGoogleSubmitting) return;
 
         try {
-            await onGoogleLogin();
-        } catch {
-            setMessage("Google sign-in failed. Please try again.");
+            setIsGoogleSubmitting(true);
+
+            await loginWithGoogle();
+
+            toast.success("Login successful", {
+                description: "Welcome back! Redirecting to your dashboard.",
+            });
+
+            router.replace("/admin");
+            router.refresh();
+        } catch (error) {
+            console.error("Google login failed:", error);
+
+            toast.error("Google login failed", {
+                description:
+                    error instanceof Error
+                        ? error.message
+                        : "Unable to sign in with Google. Please try again.",
+            });
+        } finally {
+            setIsGoogleSubmitting(false);
         }
     };
+
 
     return (
         <SpotlightCard className="mx-auto w-full max-w-md rounded-3xl border border-border bg-card p-4 shadow-sm sm:p-6">
+
             {/* Header */}
             <div className="mb-7 text-center">
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -145,16 +167,6 @@ const LoginForm = ({ onGoogleLogin, onLogin }: LoginFormProps) => {
                     />
                 </div>
 
-                {/* Feedback */}
-                {message && (
-                    <p
-                        role="status"
-                        className="rounded-lg border border-border bg-muted/50 p-3 text-sm text-muted-foreground"
-                    >
-                        {message}
-                    </p>
-                )}
-
                 {/* Submit */}
                 <Button
                     type="submit"
@@ -178,14 +190,16 @@ const LoginForm = ({ onGoogleLogin, onLogin }: LoginFormProps) => {
             {/* Divider */}
             <div className="my-6 flex items-center gap-4">
                 <div className="h-px flex-1 bg-border" />
+
                 <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                    Or continue with google
+                    Or continue with Google
                 </span>
+
                 <div className="h-px flex-1 bg-border" />
             </div>
 
             {/* Google Login */}
-            <Button
+            {/* <Button
                 type="button"
                 variant="outline"
                 className="h-11 w-full gap-3"
@@ -194,6 +208,25 @@ const LoginForm = ({ onGoogleLogin, onLogin }: LoginFormProps) => {
             >
                 <FcGoogle size={19} />
                 Continue with Google
+            </Button> */}
+            <Button
+                type="button"
+                variant="outline"
+                className="w-full gap-2 py-5"
+                disabled={isSubmitting || isGoogleSubmitting}
+                onClick={handleGoogleLogin}
+            >
+                {isGoogleSubmitting ? (
+                    <>
+                        <FiLoader className="mr-2 size-4 animate-spin" />
+                        Connecting to Google...
+                    </>
+                ) : (
+                    <>
+                        <FcGoogle className="mr-2 size-5" />
+                        Continue with Google
+                    </>
+                )}
             </Button>
         </SpotlightCard>
     );

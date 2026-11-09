@@ -19,13 +19,11 @@ export async function POST(request: NextRequest) {
 
         // 2. Check admin authorization
         const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+        const userEmail = decodedToken.email?.trim().toLowerCase();
 
-        if (
-            !adminEmail ||
-            decodedToken.email?.toLowerCase() !== adminEmail
-        ) {
+        if (!adminEmail || userEmail !== adminEmail) {
             return NextResponse.json(
-                { success: false, message: "Access denied" },
+                { success: false, message: "Your account is not authorized to access this dashboard." },
                 { status: 403 }
             );
         }

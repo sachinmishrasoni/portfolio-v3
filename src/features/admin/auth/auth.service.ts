@@ -1,53 +1,62 @@
-import { auth } from "@/lib/firebase";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
+import { deleteUser, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 
-const allowedEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
-/** Login with Email & Password */
-export const loginWithEmail = async (email: string, password: string) => {
-    if (email !== allowedEmail) {
-        throw new Error("This email is not allowed to log in.");
+// Create server-side session using Firebase ID token
+const createServerSession = async (user: {
+    getIdToken: () => Promise<string>;
+}) => {
+    const idToken = await user.getIdToken();
+
+    const response = await fetch("/api/auth/session", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ idToken }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Unable to create session.");
     }
+
+    return result;
+};
+
+// Login with Email & Password
+export const loginWithEmail = async (email: string, password: string) => {
 
     try {
         const credential = await signInWithEmailAndPassword(auth, email, password);
-        const user = credential.user;
 
-        if (user.email !== allowedEmail) {
-            throw new Error("Only the admin can link their Google account.");
-        }
+        await createServerSession(credential.user);
 
-        // 2. Get Firebase ID token
-        const idToken = await user.getIdToken();
-
-        // 3. Create HTTP-only session
-        const response = await fetch("/api/auth/session", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({ idToken }),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            // Avoid leaving a client-side Firebase session active
-            // when server session creation fails.
-            await signOut(auth);
-
-            throw new Error(result.message || "Session creation failed");
-        }
-
-        return user;
+        return credential.user;
     } catch (error: any) {
-        console.error("Email login error:", error.code, error.message);
-        throw new Error(error.message || "Invalid credentials. Please check your email and password.");
+        await signOut(auth);
+        throw error;
     }
 };
 
-/** Logout */
+
+// Google login
+export const loginWithGoogle = async () => {
+
+    try {
+        const credential = await signInWithPopup(auth, googleProvider);
+
+        await createServerSession(credential.user);
+        return credential.user;
+    } catch (error) {
+        await signOut(auth);
+        throw error;
+    }
+};
+
+// Logout
 export const logout = async () => {
     try {
         // 1. Clear the server-side session cookie
