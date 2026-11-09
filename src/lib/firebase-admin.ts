@@ -18,7 +18,6 @@ if (!projectId || !clientEmail || !privateKey) {
     );
 }
 
-const adminApp =
-    getApps()[0] ?? initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
+const adminApp = getApps()[0] ?? initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
 
 export const adminAuth = getAuth(adminApp);
