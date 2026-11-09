@@ -19,6 +19,7 @@ import {
 
 import { loginWithEmail, loginWithGoogle } from "./auth.service";
 import { useState } from "react";
+import { getAuthErrorMessage } from "./auth-errors";
 
 
 const LoginForm: React.FC = () => {
@@ -59,10 +60,7 @@ const LoginForm: React.FC = () => {
             console.error("Login failed:", error);
 
             toast.error("Login failed", {
-                description:
-                    error instanceof Error
-                        ? error.message
-                        : "Invalid email or password. Please try again.",
+                description: getAuthErrorMessage(error),
             });
         } finally {
             setIsSubmitting(false);
@@ -88,10 +86,7 @@ const LoginForm: React.FC = () => {
             console.error("Google login failed:", error);
 
             toast.error("Google login failed", {
-                description:
-                    error instanceof Error
-                        ? error.message
-                        : "Unable to sign in with Google. Please try again.",
+                description: getAuthErrorMessage(error),
             });
         } finally {
             setIsGoogleSubmitting(false);
@@ -199,16 +194,6 @@ const LoginForm: React.FC = () => {
             </div>
 
             {/* Google Login */}
-            {/* <Button
-                type="button"
-                variant="outline"
-                className="h-11 w-full gap-3"
-                onClick={handleGoogleLogin}
-                disabled={isSubmitting}
-            >
-                <FcGoogle size={19} />
-                Continue with Google
-            </Button> */}
             <Button
                 type="button"
                 variant="outline"
