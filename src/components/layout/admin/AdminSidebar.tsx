@@ -66,7 +66,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
             {/* Brand */}
             <div
                 className={cn(
-                    'flex h-16 shrink-0 items-center border-b border-border',
+                    'flex h-14 shrink-0 items-center border-b border-border',
                     collapsed ? 'justify-center px-0' : 'justify-between px-4',
                 )}
             >
@@ -83,7 +83,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                         <span className="font-heading text-lg font-bold tracking-tight text-foreground">
                             SAM
                         </span>
-                        <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                             Admin panel
                         </span>
                     </Fade>
@@ -170,7 +170,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
             </nav>
 
             {/* User */}
-            <div className="shrink-0 border-t border-border p-3">
+            <div className="shrink-0 border-t border-border p-2">
                 <Link
                     href={`${ADMIN_BASE}/settings`}
                     onClick={onNavigate}
@@ -180,9 +180,9 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
                         collapsed && 'justify-center',
                     )}
                 >
-                    <Portrait name={user.name} src={user.avatar} size="md" status="online" />
+                    <Portrait name={user.name} src={user.avatar} size="sm" status="online" />
                     <Fade show={!collapsed} className="flex min-w-0 flex-col">
-                        <span className="truncate text-sm font-medium text-foreground">
+                        <span className="truncate text-xs font-medium text-foreground">
                             {user.name}
                         </span>
                         <span className="truncate font-mono text-[11px] text-muted-foreground">

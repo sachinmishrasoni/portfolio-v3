@@ -5,6 +5,7 @@ import ThemeProvider from "@/providers/ThemeProvider";
 import { SITE_CONFIG } from "@/config/site.config";
 import { Toaster } from "@/components/ui/sonner";
 import SitePreloader from "@/components/common/SitePreloader";
+import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -36,9 +37,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <SitePreloader />
-          {children}
-          <Toaster position="top-right" richColors />
+          <QueryProvider>
+            <SitePreloader />
+            {children}
+            <Toaster position="top-right" richColors />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

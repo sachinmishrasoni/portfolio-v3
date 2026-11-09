@@ -34,7 +34,7 @@ const useBreadcrumbs = () => {
 };
 
 const iconButton =
-    'relative flex size-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+    'relative flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 
 /* -------------------------------- user menu --------------------------------- */
 
@@ -70,7 +70,7 @@ const UserMenu: React.FC<{ user: AdminUser; onSignOut: () => void }> = ({ user, 
                 aria-haspopup="menu"
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-xl p-1 transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:pr-2"
+                className="flex items-center gap-2 rounded-xl p-1 cursor-pointer transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:pr-2"
             >
                 <Portrait name={user.name} src={user.avatar} size="sm" />
                 <span className="hidden text-sm font-medium text-foreground md:block">{user.name}</span>
@@ -149,7 +149,7 @@ type AdminHeaderProps = {
 };
 
 const AdminHeader: React.FC<AdminHeaderProps> = ({
-    user={ name: '', role: '', avatar: '' },
+    user = { name: '', role: '', avatar: '' },
     collapsed,
     unreadMessages = 0,
     onOpenMobileNav,
@@ -160,7 +160,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
     const current = crumbs[crumbs.length - 1];
 
     return (
-        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-md sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background/80 px-2 backdrop-blur-md sm:px-4">
             {/* Mobile: open the drawer */}
             <button
                 type="button"
