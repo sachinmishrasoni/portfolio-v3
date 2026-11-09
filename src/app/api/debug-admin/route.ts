@@ -1,10 +1,10 @@
 // src/app/api/debug-admin/route.ts  (delete after use)
 import { NextResponse } from "next/server";
-
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+import { connection } from "next/server";
 
 export async function GET() {
+    await connection();
+
     const env = {
         FIREBASE_PROJECT_ID: !!process.env.FIREBASE_PROJECT_ID,
         FIREBASE_CLIENT_EMAIL: !!process.env.FIREBASE_CLIENT_EMAIL,
