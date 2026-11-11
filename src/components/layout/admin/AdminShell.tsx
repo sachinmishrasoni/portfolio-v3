@@ -113,7 +113,7 @@ const AdminShell: React.FC<AdminShellProps> = ({ children, user, badges }) => {
                     onSignOut={handleSignOut}
                 />
 
-                <main id="admin-main" className="flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+                <main id="admin-main" className="flex-1 px-4 py-4">
                     <div className="mx-auto w-full max-w-7xl">{children}</div>
                 </main>
 
