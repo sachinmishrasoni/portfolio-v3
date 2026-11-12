@@ -1,160 +1,212 @@
 import { cn } from '@/lib/utils';
-import type { FieldVariant } from './form.types';
+import type { FieldSize, FieldVariant } from './form.types';
 
 /* ------------------------------ the control ------------------------------- */
 
 const controlBase =
-    'w-full rounded-xl border bg-background/60 px-4 font-mono text-base text-foreground shadow-none ' +
-    'transition-[border-color,box-shadow] duration-200 md:text-sm dark:bg-background/60 ' +
-    'focus-visible:outline-none focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-70';
+    'w-full rounded-lg border font-mono text-foreground shadow-none ' +
+    'transition-[border-color,background-color,box-shadow] duration-200 ' +
+    'placeholder:text-muted-foreground/70 ' +
+    'focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed';
 
-const controlOk = 'border-border focus-visible:border-primary/60 focus-visible:ring-primary/15';
-const controlBad =
-    'border-destructive/70 focus-visible:border-destructive focus-visible:ring-destructive/15';
-
-export const controlClass = (invalid: boolean, className?: string) =>
-    cn(controlBase, invalid ? controlBad : controlOk, className);
-
-const hiddenPlaceholder =
-    'placeholder:text-transparent focus:placeholder:text-muted-foreground/70';
-const shownPlaceholder = 'placeholder:text-muted-foreground/70';
-
-const inputByVariant: Record<FieldVariant, string> = {
-    floating: cn('peer h-12 pt-4', hiddenPlaceholder),
-    border: cn('peer h-12', hiddenPlaceholder),
-    top: cn('peer h-11', shownPlaceholder),
+// Colours per variant (normal state)
+const variantOk: Record<FieldVariant, string> = {
+    default: 'border-border bg-background focus-visible:border-primary',
+    outlined: 'border-input bg-background focus-visible:border-primary',
+    filled:
+        'border-transparent bg-primary/5 hover:bg-primary/10 ' +
+        'focus-visible:border-primary focus-visible:bg-primary/10',
 };
 
-export const inputClass = (invalid: boolean, className?: string, variant: FieldVariant = 'floating') =>
-    controlClass(invalid, cn(inputByVariant[variant], className));
-
-const textareaByVariant: Record<FieldVariant, string> = {
-    floating: cn('peer min-h-32 resize-none pb-7 pt-7', hiddenPlaceholder),
-    border: cn('peer min-h-32 resize-none pb-7 pt-3.5', hiddenPlaceholder),
-    top: cn('peer min-h-32 resize-none pb-7 pt-3', shownPlaceholder),
+// Colours per variant (error state)
+const variantBad: Record<FieldVariant, string> = {
+    default: 'border-destructive/70 bg-background focus-visible:border-destructive',
+    outlined: 'border-destructive/70 bg-background focus-visible:border-destructive',
+    filled:
+        'border-destructive/40 bg-destructive/10 hover:bg-destructive/10 ' +
+        'focus-visible:border-destructive focus-visible:bg-destructive/10',
 };
 
-export const textareaClass = (invalid: boolean, className?: string, variant: FieldVariant = 'floating') =>
-    controlClass(invalid, cn(textareaByVariant[variant], className));
-
-// const triggerByVariant: Record<FieldVariant, string> = {
-//     // h-* is repeated with shadcn's data-[size] variants so it beats `data-[size=default]:h-9`
-//     floating: 'h-12 pb-1 pt-4 data-[size=default]:h-12 data-[size=sm]:h-12',
-//     border: 'h-12 py-0 data-[size=default]:h-12 data-[size=sm]:h-12',
-//     top: 'h-11 py-0 data-[size=default]:h-11 data-[size=sm]:h-11',
-// };
-
-const triggerByVariant: Record<FieldVariant, string> = {
-    // h-* is repeated with shadcn's data-[size] variants so it beats `data-[size=default]:h-9`
-    floating: 'h-12 py-0 data-[size=default]:h-12 data-[size=sm]:h-12',
-    border: 'h-12 py-0 data-[size=default]:h-12 data-[size=sm]:h-12',
-    top: 'h-11 py-0 data-[size=default]:h-11 data-[size=sm]:h-11',
+// Colours per variant (disabled state)
+// outlined keeps `bg-background` so the label on the border blends in
+const variantDisabled: Record<FieldVariant, string> = {
+    default: 'disabled:bg-muted/60 disabled:opacity-70',
+    outlined: 'disabled:bg-background disabled:opacity-60',
+    filled: 'disabled:bg-muted disabled:opacity-70 disabled:hover:bg-muted',
 };
 
-/** Pushes the value text below the floated label (floating variant only), without moving the icon */
-export const triggerTextClass = (variant: FieldVariant = 'floating') =>
-    cn('block min-w-0 truncate', variant === 'floating' && 'pt-3');
-
-export const triggerClass = (
+export const controlClass = (
     invalid: boolean,
-    open: boolean,
+    variant: FieldVariant = 'default',
     className?: string,
-    variant: FieldVariant = 'floating',
+) =>
+    cn(
+        controlBase,
+        invalid ? variantBad[variant] : variantOk[variant],
+        variantDisabled[variant],
+        className,
+    );
+
+/* --------------------------------- sizes ---------------------------------- */
+// Heights: sm 32px · md 40px · lg 48px
+// Text is 16px on small screens (stops iOS zooming into inputs), then the size's own text from `md:` up.
+
+const sizeHeight: Record<FieldSize, string> = {
+    sm: 'h-8',
+    md: 'h-10',
+    lg: 'h-12',
+};
+
+const sizeText: Record<FieldSize, string> = {
+    sm: 'px-3 text-base md:text-xs',
+    md: 'px-3.5 text-base md:text-sm',
+    lg: 'px-4 text-base md:text-base',
+};
+
+// Written out in full so Tailwind can see every class
+const sizeTrigger: Record<FieldSize, string> = {
+    sm: 'h-8 py-0 data-[size=default]:h-8 data-[size=sm]:h-8',
+    md: 'h-10 py-0 data-[size=default]:h-10 data-[size=sm]:h-10',
+    lg: 'h-12 py-0 data-[size=default]:h-12 data-[size=sm]:h-12',
+};
+
+const sizeTextarea: Record<FieldSize, string> = {
+    sm: 'min-h-20 py-1.5',
+    md: 'min-h-28 py-2',
+    lg: 'min-h-32 py-3',
+};
+
+/** Right padding that makes room for the icon button (password eye, etc.) */
+export const iconPaddingClass: Record<FieldSize, string> = {
+    sm: 'pr-9',
+    md: 'pr-10',
+    lg: 'pr-12',
+};
+
+/** Hides the up/down arrows on type="number" */
+export const numberNoSpinnerClass =
+    '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
+
+// outlined has a floating label that rests inside the field, so the placeholder
+// stays hidden until the field is focused (otherwise it would overlap the label)
+const outlinedPlaceholder = 'placeholder:text-transparent focus:placeholder:text-muted-foreground/70';
+
+export const inputClass = (
+    invalid: boolean,
+    className?: string,
+    variant: FieldVariant = 'default',
+    size: FieldSize = 'md',
 ) =>
     controlClass(
         invalid,
+        variant,
+        cn('peer', sizeHeight[size], sizeText[size], variant === 'outlined' && outlinedPlaceholder, className),
+    );
+
+export const textareaClass = (
+    invalid: boolean,
+    className?: string,
+    variant: FieldVariant = 'default',
+    size: FieldSize = 'md',
+) =>
+    controlClass(
+        invalid,
+        variant,
         cn(
-            'flex items-center justify-between gap-2 text-left font-normal dark:hover:bg-background/60',
-            triggerByVariant[variant],
-            open &&
-            (invalid
-                ? 'border-destructive ring-4 ring-destructive/15'
-                : 'border-primary/60 ring-4 ring-primary/15'),
+            'peer resize-none',
+            sizeText[size],
+            sizeTextarea[size],
+            variant === 'outlined' && outlinedPlaceholder,
             className,
         ),
     );
 
+/** For the shadcn Select / date trigger button */
+export const triggerClass = (
+    invalid: boolean,
+    open: boolean,
+    className?: string,
+    variant: FieldVariant = 'default',
+    size: FieldSize = 'md',
+) =>
+    controlClass(
+        invalid,
+        variant,
+        cn(
+            'flex items-center justify-between gap-2 text-left font-normal dark:hover:bg-transparent',
+            sizeText[size],
+            sizeTrigger[size],
+            open &&
+            (invalid
+                ? 'border-destructive'
+                : 'border-primary'),
+            className,
+        ),
+    );
+
+/** Value text inside a select / date trigger */
+export const triggerTextClass = () => 'block min-w-0 truncate';
+
 /* -------------------------------- the label ------------------------------- */
 
-const labelBase =
-    'pointer-events-none absolute z-10 max-w-[calc(100%-2rem)] truncate font-mono text-sm text-muted-foreground transition-all duration-200';
+const labelSize: Record<FieldSize, string> = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-sm',
+};
 
-// Positions per variant. Written out in full so Tailwind can see every class.
-const leftFloating = 'left-4';
-const leftBorder = 'left-2.5 px-1.5'; // 10px + 6px padding = text lines up with the input text (16px)
+/** Label for `default` and `filled`: a normal label above the control */
+export const topLabelClass = (size: FieldSize = 'md') =>
+    cn('mb-1.5 block font-mono font-medium text-foreground', labelSize[size]);
 
-const floatedInside = 'top-2 translate-y-0 text-[10px] uppercase tracking-wider';
-// On the border: centred on the top edge, with a solid bg that "cuts" the border line.
-// Change `bg-background` here if your fields sit on a card with a different background.
-const floatedOnBorder =
-    'top-0 -translate-y-1/2 bg-background text-[10px] uppercase tracking-wider';
+/**
+ * Label for `outlined`: rests inside the field, then floats up onto the top border
+ * (with a solid bg that "cuts" the border line) when focused or filled.
+ * Change `bg-background` if your fields sit on a card with a different background.
+ *
+ * - inputs/textareas: leave `floated` undefined, the control's `peer` state drives it
+ * - selects/dates: pass `floated` true/false
+ */
+export const outlinedLabelClass = (invalid: boolean, multiline = false, floated?: boolean) => {
+    const base = cn(
+        'pointer-events-none absolute left-2.5 z-10 max-w-[calc(100%-1.5rem)] truncate px-1.5 font-mono',
+        'transition-all duration-200',
+        invalid ? 'text-destructive' : 'text-muted-foreground group-focus-within/field:text-primary',
+    );
+    const rest = multiline ? 'top-3 translate-y-0 text-sm' : 'top-1/2 -translate-y-1/2 text-sm';
 
-const labelRest = (multiline: boolean) => (multiline ? 'top-3.5' : 'top-1/2 -translate-y-1/2');
-
-/** Label for inputs/textareas (floating + border): driven by the control's `peer` state. */
-export const peerLabelClass = (
-    invalid: boolean,
-    multiline = false,
-    variant: FieldVariant = 'floating',
-) => {
-    const color = invalid
-        ? 'peer-focus:text-destructive peer-[:not(:placeholder-shown)]:text-destructive'
-        : 'peer-focus:text-primary peer-[:not(:placeholder-shown)]:text-primary';
-
-    if (variant === 'border') {
-        return cn(
-            labelBase,
-            leftBorder,
-            labelRest(multiline),
-            'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-background peer-focus:text-[10px] peer-focus:uppercase peer-focus:tracking-wider',
-            'peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:-translate-y-1/2 peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:text-[10px] peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:tracking-wider',
-            'peer-[:-webkit-autofill]:top-0 peer-[:-webkit-autofill]:-translate-y-1/2 peer-[:-webkit-autofill]:bg-background peer-[:-webkit-autofill]:text-[10px] peer-[:-webkit-autofill]:uppercase peer-[:-webkit-autofill]:tracking-wider',
-            color,
-        );
+    if (floated !== undefined) {
+        return cn(base, floated ? 'top-0 -translate-y-1/2 bg-background text-xs' : rest);
     }
 
     return cn(
-        labelBase,
-        leftFloating,
-        labelRest(multiline),
-        'peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-[10px] peer-focus:uppercase peer-focus:tracking-wider',
-        'peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-[10px] peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:tracking-wider',
-        // Browser autofill fills the value without `:placeholder-shown` changing, so float for it too
-        'peer-[:-webkit-autofill]:top-2 peer-[:-webkit-autofill]:translate-y-0 peer-[:-webkit-autofill]:text-[10px] peer-[:-webkit-autofill]:uppercase peer-[:-webkit-autofill]:tracking-wider',
-        color,
+        base,
+        rest,
+        'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-background peer-focus:text-xs',
+        'peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:-translate-y-1/2 peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:text-xs',
+        // Browser autofill fills the value without `:placeholder-shown` changing
+        'peer-[:-webkit-autofill]:top-0 peer-[:-webkit-autofill]:-translate-y-1/2 peer-[:-webkit-autofill]:bg-background peer-[:-webkit-autofill]:text-xs',
     );
 };
 
-/** Label for selects and dates: the field says when to float */
-export const stateLabelClass = (
-    floated: boolean,
-    invalid: boolean,
-    variant: FieldVariant = 'floating',
-) => {
-    const border = variant === 'border';
-    return cn(
-        labelBase,
-        border ? leftBorder : leftFloating,
-        labelRest(false),
-        floated && (border ? floatedOnBorder : floatedInside),
-        floated && (invalid ? 'text-destructive' : 'text-primary'),
-    );
-};
-
-/** Label for the `top` variant: a normal label above the control */
-export const topLabelClass = (invalid: boolean) =>
-    cn(
-        'mb-1.5 block px-1 font-mono text-xs uppercase tracking-wider transition-colors',
-        invalid
-            ? 'text-destructive'
-            : 'text-muted-foreground group-focus-within/field:text-primary',
-    );
+export const requiredMarkClass = 'ml-0.5 text-destructive';
 
 /* ------------------------------ small pieces ------------------------------ */
 
-export const messageClass = 'mt-1.5 px-1 text-xs';
-export const errorClass = cn(messageClass, 'text-destructive');
+export const messageClass = 'mt-1.5 px-0.5 text-xs';
+export const errorClass = cn(messageClass, 'flex items-center gap-1.5 text-destructive');
 export const hintClass = cn(messageClass, 'text-muted-foreground');
 
-export const fieldIconButtonClass =
-    'absolute right-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-60';
+const iconButtonSize: Record<FieldSize, string> = {
+    sm: 'right-1.5 size-6 text-sm',
+    md: 'right-1.5 size-7 text-base',
+    lg: 'right-2 size-8 text-base',
+};
+
+export const fieldIconButtonClass = (size: FieldSize = 'md') =>
+    cn(
+        'absolute top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors',
+        'hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary',
+        'disabled:pointer-events-none disabled:opacity-60',
+        iconButtonSize[size],
+    );

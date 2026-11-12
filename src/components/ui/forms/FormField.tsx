@@ -2,15 +2,16 @@
 
 import React from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { FiAlertCircle } from 'react-icons/fi';
 import { cn } from '@/lib/utils';
 import {
     errorClass,
     hintClass,
-    peerLabelClass,
-    stateLabelClass,
+    outlinedLabelClass,
+    requiredMarkClass,
     topLabelClass,
 } from './form.styles';
-import type { FieldVariant } from './form.types';
+import type { FieldSize, FieldVariant } from './form.types';
 
 export const describedBy = (id: string, error?: string, hint?: string) =>
     error ? `${id}-error` : hint ? `${id}-hint` : undefined;
@@ -22,10 +23,12 @@ type FloatingLabelProps = {
     children: React.ReactNode;
     required?: boolean;
     invalid?: boolean;
-    multiline?: boolean;
-    /** Leave out for inputs/textareas (they float via `peer`). Pass true/false for selects and dates. */
-    floated?: boolean;
     variant?: FieldVariant;
+    size?: FieldSize;
+    /** outlined + textarea: label rests at the top instead of the middle */
+    multiline?: boolean;
+    /** outlined + select/date only: whether the label is floated. Leave out for inputs/textareas. */
+    floated?: boolean;
 };
 
 export const FloatingLabel: React.FC<FloatingLabelProps> = ({
@@ -33,28 +36,25 @@ export const FloatingLabel: React.FC<FloatingLabelProps> = ({
     children,
     required,
     invalid = false,
+    variant = 'default',
+    size = 'md',
     multiline = false,
     floated,
-    variant = 'floating',
-}) => {
-    const className =
-        variant === 'top'
-            ? topLabelClass(invalid)
-            : floated === undefined
-              ? peerLabelClass(invalid, multiline, variant)
-              : stateLabelClass(floated, invalid, variant);
-
-    return (
-        <label htmlFor={htmlFor} className={className}>
-            {children}
-            {required && (
-                <span aria-hidden className="ml-0.5">
-                    *
-                </span>
-            )}
-        </label>
-    );
-};
+}) => (
+    <label
+        htmlFor={htmlFor}
+        className={
+            variant === 'outlined' ? outlinedLabelClass(invalid, multiline, floated) : topLabelClass(size)
+        }
+    >
+        {children}
+        {required && (
+            <span aria-hidden className={requiredMarkClass}>
+                *
+            </span>
+        )}
+    </label>
+);
 
 /* -------------------------------- FormField -------------------------------- */
 
@@ -63,8 +63,10 @@ type FormFieldProps = {
     label: string;
     required?: boolean;
     variant?: FieldVariant;
-    /** Selects/dates only: whether the label is floated. Leave out for inputs/textareas. */
+    size?: FieldSize;
+    /** outlined + select/date only: whether the label is floated. Leave out for inputs/textareas. */
     floated?: boolean;
+    /** outlined + textarea: label rests at the top */
     multiline?: boolean;
     error?: string;
     hint?: string;
@@ -77,7 +79,8 @@ const FormField: React.FC<FormFieldProps> = ({
     id,
     label,
     required,
-    variant = 'floating',
+    variant = 'default',
+    size = 'md',
     floated,
     multiline,
     error,
@@ -86,15 +89,17 @@ const FormField: React.FC<FormFieldProps> = ({
     children,
 }) => {
     const reduce = useReducedMotion();
+    const isOutlined = variant === 'outlined';
 
     const labelNode = (
         <FloatingLabel
             htmlFor={id}
             required={required}
             invalid={Boolean(error)}
-            multiline={multiline}
-            floated={floated}
             variant={variant}
+            size={size}
+            floated={floated}
+            multiline={multiline}
         >
             {label}
         </FloatingLabel>
@@ -102,12 +107,14 @@ const FormField: React.FC<FormFieldProps> = ({
 
     return (
         <div className={cn('group/field w-full', className)}>
-            {variant === 'top' && labelNode}
+            {/* default + filled: label above the control */}
+            {!isOutlined && labelNode}
 
-            {/* The control must come BEFORE the label so the `peer` selectors work */}
             <div className="relative">
+                {/* The control must come BEFORE the label so the `peer` selectors work */}
                 {children}
-                {variant !== 'top' && labelNode}
+                {/* outlined: label floats from inside the control onto its top border */}
+                {isOutlined && labelNode}
             </div>
 
             <AnimatePresence initial={false} mode="wait">
@@ -122,7 +129,8 @@ const FormField: React.FC<FormFieldProps> = ({
                         transition={{ duration: 0.2 }}
                         className={errorClass}
                     >
-                        {error}
+                        <FiAlertCircle aria-hidden className="size-3.5 shrink-0" />
+                        <span>{error}</span>
                     </motion.p>
                 ) : hint ? (
                     <motion.p

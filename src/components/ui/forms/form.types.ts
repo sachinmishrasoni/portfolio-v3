@@ -1,6 +1,14 @@
 import type { ChangeEventHandler, FocusEventHandler } from 'react';
 
-export type FieldVariant = 'floating' | 'border' | 'top';
+/**
+ * default:  label sits above a bordered field
+ * outlined: label sits on the top border (cuts the border line)
+ * filled:   label sits above a tinted, filled field
+ */
+export type FieldVariant = 'default' | 'outlined' | 'filled';
+
+/** sm = 32px, md = 40px, lg = 48px tall */
+export type FieldSize = 'sm' | 'md' | 'lg';
 
 /** Props that every field in this folder accepts */
 export type FieldBaseProps = {
@@ -8,9 +16,9 @@ export type FieldBaseProps = {
     id: string;
     /** The field's `name`, so it is submitted with the form */
     name: string;
-    /** The floating label */
+    /** The field's label */
     label: string;
-    /** Shown inside the field only while it is focused (the label sits in its place otherwise) */
+    /** Placeholder shown inside the empty field, e.g. "Enter your username" */
     placeholder?: string;
     /** Adds * to the label and `required` / `aria-required` to the control */
     required?: boolean;
@@ -21,21 +29,19 @@ export type FieldBaseProps = {
     hint?: string;
     /** Classes for the outer wrapper, e.g. "sm:col-span-2" */
     className?: string;
-    
-    /**
-     * floating: label floats inside the field (default)
-     * border:   label sits on the top border when focused / filled
-     * top:      label always sits above the field
-     */
+    /** Visual style of the field (default: 'default') */
     variant?: FieldVariant;
+    /** Height / text size of the field (default: 'md') */
+    size?: FieldSize;
 };
 
 /* ------------------------------- TextField -------------------------------- */
 
-export type TextFieldType = 'text' | 'email' | 'password';
+export type TextFieldType = 'text' | 'email' | 'password' | 'number';
 
 export type TextFieldProps = FieldBaseProps & {
     type?: TextFieldType;
+    /** Keep it a string, even for type="number" (works with `formik.handleChange`) */
     value: string;
     /** A normal change event, so it works with `formik.handleChange` or `setValues(e.target.value)` */
     onChange: ChangeEventHandler<HTMLInputElement>;
@@ -43,6 +49,12 @@ export type TextFieldProps = FieldBaseProps & {
     autoComplete?: string;
     autoFocus?: boolean;
     maxLength?: number;
+    /** type="number" only */
+    min?: number | string;
+    /** type="number" only */
+    max?: number | string;
+    /** type="number" only */
+    step?: number | string;
 };
 
 /* ----------------------------- TextareaField ------------------------------ */

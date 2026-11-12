@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import FormField, { describedBy } from './FormField';
 import { triggerClass, triggerTextClass } from './form.styles';
-import type { DateFieldProps } from './form.types';
+import type { DateFieldProps, FieldSize } from './form.types';
 
 /* --------------------------------- helpers --------------------------------- */
 // Values are plain "yyyy-MM-dd" strings, built from LOCAL date parts. Going through
@@ -32,15 +32,24 @@ const displayFormat = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
 });
 
+// Calendar icon scales with the field size
+const iconSize: Record<FieldSize, string> = {
+    sm: 'size-3.5',
+    md: 'size-4',
+    lg: 'size-[18px]',
+};
+
 /* ---------------------------------- field ---------------------------------- */
 
 /**
  * Date picker built on the shadcn Popover + Calendar.
  *
  * variant:
- *  - 'floating' (default): label floats inside the field
- *  - 'border':             label sits on the top border when open / filled
- *  - 'top':                label always sits above the field, placeholder always visible
+ *  - 'default'  (default): label above a bordered field, placeholder always visible
+ *  - 'outlined':           label rests inside the field, floats onto the top border when open / filled
+ *  - 'filled':             label above a tinted field, placeholder always visible
+ *
+ * size: 'sm' (32px) | 'md' (40px, default) | 'lg' (48px)
  */
 const DateField: React.FC<DateFieldProps> = ({
     id,
@@ -57,16 +66,18 @@ const DateField: React.FC<DateFieldProps> = ({
     className,
     minDate,
     maxDate,
-    variant = 'floating',
+    variant = 'default',
+    size = 'md',
 }) => {
     const [open, setOpen] = useState(false);
     const invalid = Boolean(error);
 
     const date = parseDate(value);
-    // Used by 'floating' and 'border'; ignored by 'top' (its label never moves)
+    // Only the outlined label moves; default and filled labels stay above the field
     const floated = Boolean(date) || open;
-    // With the label above the field, the placeholder can always be shown
-    const showPlaceholder = open || variant === 'top';
+    // With the label above the field the placeholder can always be shown.
+    // With the outlined label resting inside, show it only once the label has floated.
+    const showPlaceholder = variant !== 'outlined' || open;
 
     const min = parseDate(minDate);
     const max = parseDate(maxDate);
@@ -92,6 +103,7 @@ const DateField: React.FC<DateFieldProps> = ({
             label={label}
             required={required}
             variant={variant}
+            size={size}
             floated={floated}
             error={error}
             hint={hint}
@@ -111,25 +123,19 @@ const DateField: React.FC<DateFieldProps> = ({
                     aria-invalid={invalid}
                     aria-required={required}
                     aria-describedby={describedBy(id, error, hint)}
-                    className={triggerClass(invalid, open, undefined, variant)}
+                    className={triggerClass(invalid, open, undefined, variant, size)}
                 >
-                    {/* <span
-                        className={cn('block min-w-0 truncate', !date && 'text-muted-foreground/70')}
-                    >
-                        {date
-                            ? displayFormat.format(date)
-                            : showPlaceholder
-                                ? (placeholder ?? '')
-                                : ''}
-                    </span> */}
-                    <span className={cn(triggerTextClass(variant), !date && 'text-muted-foreground/70')}>
+                    <span className={cn(triggerTextClass(), !date && 'text-muted-foreground/70')}>
                         {date
                             ? displayFormat.format(date)
                             : showPlaceholder
                                 ? (placeholder ?? '')
                                 : ''}
                     </span>
-                    <FiCalendar aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+                    <FiCalendar
+                        aria-hidden
+                        className={cn('shrink-0 text-muted-foreground', iconSize[size])}
+                    />
                 </PopoverTrigger>
 
                 <PopoverContent align="start" className="w-auto p-0">
