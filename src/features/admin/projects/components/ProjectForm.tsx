@@ -17,6 +17,7 @@ import {
 import type { Project } from "../projects.types";
 import {
     projectFormSchema,
+    type ProjectFormInput,
     type ProjectFormValues,
 } from "../project.schema";
 
@@ -38,7 +39,7 @@ const CATEGORY_OPTIONS: SelectOption[] = [
     { value: "other", label: "Other" },
 ];
 
-const DEFAULT_VALUES: ProjectFormValues = {
+const DEFAULT_VALUES: ProjectFormInput = {
     title: "",
     slug: "",
     description: "",
@@ -67,7 +68,7 @@ const ProjectForm = ({
         watch,
         setValue,
         formState: { errors, isSubmitting },
-    } = useForm<ProjectFormValues>({
+    } = useForm<ProjectFormInput, unknown, ProjectFormValues>({
         resolver: zodResolver(projectFormSchema),
         defaultValues: DEFAULT_VALUES,
         mode: "onSubmit",
@@ -263,9 +264,10 @@ const ProjectForm = ({
                                     label="Display Order"
                                     placeholder="0"
                                     value={String(field.value)}
-                                    onChange={(value) =>
-                                        field.onChange(value === "" ? 0 : Number(value))
-                                    }
+                                    onChange={(event) => {
+                                        const value = event.target.value;
+                                        field.onChange(value === "" ? 0 : Number(value));
+                                    }}
                                     onBlur={field.onBlur}
                                     disabled={isSubmitting}
                                     error={errors.displayOrder?.message}
@@ -385,7 +387,7 @@ const ProjectForm = ({
                                     placeholder="https://example.com/image-1.png, https://example.com/image-2.png"
                                     rows={3}
                                     hint="Enter multiple image URLs separated by commas."
-                                    value={field.value}
+                                    value={field.value ?? ""}
                                     onChange={field.onChange}
                                     onBlur={field.onBlur}
                                     disabled={isSubmitting}
@@ -561,18 +563,13 @@ const ProjectForm = ({
                     </Button>
                 )}
 
-                <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                        <>
-                            <FiLoader className="animate-spin" />
-                            Saving...
-                        </>
-                    ) : (
-                        <>
-                            <FiSave />
-                            {initialData ? "Update Project" : "Create Project"}
-                        </>
-                    )}
+                <Button
+                    type="submit"
+                    loading={isSubmitting}
+                    loadingText="Saving..."
+                    startIcon={<FiSave />}
+                >
+                    {initialData ? "Update Project" : "Create Project"}
                 </Button>
             </div>
         </form>

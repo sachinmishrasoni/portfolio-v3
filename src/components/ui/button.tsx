@@ -1,5 +1,7 @@
+import * as React from "react"
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
+import { FiLoader } from "react-icons/fi"
 import { cn } from "cn"
 
 const buttonVariants = cva(
@@ -39,18 +41,77 @@ const buttonVariants = cva(
   }
 )
 
+type ButtonExtraProps = {
+  /** Shows a spinner, disables the button and sets `aria-busy` */
+  loading?: boolean
+  /** Replaces the children while `loading` (e.g. "Saving..."). Without it the children stay. */
+  loadingText?: React.ReactNode
+  /** Icon placed before the text. Replaced by the spinner while `loading`. */
+  startIcon?: React.ReactNode
+  /** Icon placed after the text. Hidden while `loading`. */
+  endIcon?: React.ReactNode
+}
+
 function Button({
   className,
   variant = "default",
   size = "default",
+  loading = false,
+  loadingText,
+  startIcon,
+  endIcon,
+  disabled,
+  children,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & ButtonExtraProps) {
+  const isIconOnly = typeof size === "string" && size.startsWith("icon")
+
+  const spinner = (
+    <span data-icon="inline-start" className="inline-flex shrink-0">
+      <FiLoader aria-hidden className="animate-spin" />
+    </span>
+  )
+
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      data-loading={loading ? "" : undefined}
+      aria-busy={loading || undefined}
+      disabled={disabled || loading}
+      className={cn(
+        buttonVariants({ variant, size }),
+        // A loading button is disabled, but should not look as faded as a disabled one
+        loading && "disabled:opacity-70",
+        className
+      )}
       {...props}
-    />
+    >
+      {loading ? (
+        // icon-only buttons have no room for text, so they show just the spinner
+        isIconOnly ? (
+          <FiLoader aria-hidden className="animate-spin" />
+        ) : (
+          <>
+            {spinner}
+            {loadingText ?? children}
+          </>
+        )
+      ) : (
+        <>
+          {startIcon ? (
+            <span data-icon="inline-start" className="inline-flex shrink-0">
+              {startIcon}
+            </span>
+          ) : null}
+          {children}
+          {endIcon ? (
+            <span data-icon="inline-end" className="inline-flex shrink-0">
+              {endIcon}
+            </span>
+          ) : null}
+        </>
+      )}
+    </ButtonPrimitive>
   )
 }
 

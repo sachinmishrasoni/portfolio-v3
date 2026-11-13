@@ -7,7 +7,8 @@ const controlBase =
     'w-full rounded-lg border font-mono text-foreground shadow-none ' +
     'transition-[border-color,background-color,box-shadow] duration-200 ' +
     'placeholder:text-muted-foreground/70 ' +
-    'focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed';
+    'focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed' +
+    ' aria-invalid:ring-0 dark:aria-invalid:ring-0';
 
 // Colours per variant (normal state)
 const variantOk: Record<FieldVariant, string> = {
@@ -169,23 +170,37 @@ export const topLabelClass = (size: FieldSize = 'md') =>
  */
 export const outlinedLabelClass = (invalid: boolean, multiline = false, floated?: boolean) => {
     const base = cn(
-        'pointer-events-none absolute left-2.5 z-10 max-w-[calc(100%-1.5rem)] truncate px-1.5 font-mono',
+        'pointer-events-none absolute left-2.5 z-10 max-w-[calc(100%-1.5rem)] truncate rounded-lg px-2 font-mono',
         'transition-all duration-200',
         invalid ? 'text-destructive' : 'text-muted-foreground group-focus-within/field:text-primary',
     );
     const rest = multiline ? 'top-3 translate-y-0 text-sm' : 'top-1/2 -translate-y-1/2 text-sm';
 
     if (floated !== undefined) {
-        return cn(base, floated ? 'top-0 -translate-y-1/2 bg-background text-xs' : rest);
+        return cn(base, floated ? 'top-0 -translate-y-1/2 bg-background dark:bg-card text-xs' : rest);
     }
+
+    // return cn(
+    //     base,
+    //     rest,
+    //     'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-background dark:peer-focus:bg-card peer-focus:text-xs',
+    //     'peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:-translate-y-1/2 peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:text-xs',
+    //     // Browser autofill fills the value without `:placeholder-shown` changing
+    //     'peer-[:-webkit-autofill]:top-0 peer-[:-webkit-autofill]:-translate-y-1/2 peer-[:-webkit-autofill]:bg-background peer-[:-webkit-autofill]:text-xs',
+    // );
 
     return cn(
         base,
         rest,
-        'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-background peer-focus:text-xs',
-        'peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:-translate-y-1/2 peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:text-xs',
-        // Browser autofill fills the value without `:placeholder-shown` changing
-        'peer-[:-webkit-autofill]:top-0 peer-[:-webkit-autofill]:-translate-y-1/2 peer-[:-webkit-autofill]:bg-background peer-[:-webkit-autofill]:text-xs',
+        // focused
+        'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-xs',
+        'peer-focus:bg-background dark:peer-focus:bg-card',
+        // has a value (works without focus)
+        'peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:-translate-y-1/2 peer-[:not(:placeholder-shown)]:text-xs',
+        'peer-[:not(:placeholder-shown)]:bg-background dark:peer-[:not(:placeholder-shown)]:bg-card',
+        // browser autofill
+        'peer-[:-webkit-autofill]:top-0 peer-[:-webkit-autofill]:-translate-y-1/2 peer-[:-webkit-autofill]:text-xs',
+        'peer-[:-webkit-autofill]:bg-background dark:peer-[:-webkit-autofill]:bg-card',
     );
 };
 

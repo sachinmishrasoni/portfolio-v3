@@ -35,4 +35,5 @@ export const projectFormSchema = z.object({
     displayOrder: z.number().int().min(0, "Display order cannot be negative"),
 });
 
-export type ProjectFormValues = z.infer<typeof projectFormSchema>;
+export type ProjectFormInput = z.input<typeof projectFormSchema>;
+export type ProjectFormValues = z.output<typeof projectFormSchema>;
