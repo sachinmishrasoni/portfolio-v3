@@ -101,3 +101,21 @@ export type DateFieldProps = FieldBaseProps & {
     /** Latest selectable date, "yyyy-MM-dd" */
     maxDate?: string;
 };
+
+export type MultiSelectFieldProps = FieldBaseProps & {
+    options: SelectOption[];
+    /** The selected options' `value`s */
+    value: string[];
+    /** Gets the new array of values, not an event */
+    onChange: (value: string[]) => void;
+    onBlur?: () => void;
+    /** Show the search box in the list (default true) */
+    searchable?: boolean;
+    /** Let the user add a value that is not in `options` by typing it (default false) */
+    creatable?: boolean;
+    /** Maximum number of selected values */
+    maxSelected?: number;
+    /** Shown when the search finds nothing */
+    emptyText?: string;
+    searchPlaceholder?: string;
+};

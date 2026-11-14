@@ -37,6 +37,9 @@ export const exampleFormSchema = z.object({
         .trim()
         .min(10, "Tell us a little more (at least 10 characters).")
         .max(300, "Keep it under 300 characters."),
+
+    description: z.string().min(1, "Description is required"),
+    technologies: z.array(z.string()).min(1, "Select at least one technology"),
 });
 
 export type ExampleFormValues = z.infer<typeof exampleFormSchema>;

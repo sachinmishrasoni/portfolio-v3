@@ -6,6 +6,7 @@ import { SITE_CONFIG } from "@/config/site.config";
 import { Toaster } from "@/components/ui/sonner";
 import SitePreloader from "@/components/common/SitePreloader";
 import QueryProvider from "@/providers/QueryProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -39,7 +40,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <QueryProvider>
             <SitePreloader />
-            {children}
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>

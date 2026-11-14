@@ -134,7 +134,7 @@ export const triggerClass = (
         invalid,
         variant,
         cn(
-            'flex items-center justify-between gap-2 text-left font-normal dark:hover:bg-transparent',
+            'flex items-center justify-between gap-2 text-left font-normal dark:bg-card/60 dark:hover:bg-transparent',
             sizeText[size],
             sizeTrigger[size],
             open &&
@@ -224,4 +224,29 @@ export const fieldIconButtonClass = (size: FieldSize = 'md') =>
         'hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary',
         'disabled:pointer-events-none disabled:opacity-60',
         iconButtonSize[size],
+    );
+
+const sizeMultiSelect: Record<FieldSize, string> = {
+    sm: 'min-h-8 py-1 text-base md:text-xs',
+    md: 'min-h-10 py-1.5 text-base md:text-sm',
+    lg: 'min-h-12 py-2 text-base md:text-base',
+};
+
+export const multiSelectControlClass = (
+    invalid: boolean,
+    open: boolean,
+    variant: FieldVariant = 'default',
+    size: FieldSize = 'md',
+    className?: string,
+) =>
+    controlClass(
+        invalid,
+        variant,
+        cn(
+            'relative flex cursor-pointer flex-wrap items-center gap-1.5 px-3 pr-10 text-left',
+            'aria-disabled:cursor-not-allowed aria-disabled:opacity-70',
+            sizeMultiSelect[size],
+            open && (invalid ? 'border-destructive' : 'border-primary'),
+            className,
+        ),
     );

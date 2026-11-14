@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import type { ColDef } from "ag-grid-community";
 
 import { Badge } from "@/components/ui/badge";
@@ -9,60 +9,62 @@ import {
     DataTable,
     createActionColumn,
 } from "@/components/common/DataTable";
+import { Project } from "../projects.types";
+import { useRouter } from "next/navigation";
 
-// Project type
-interface Project {
-    id: string;
-    name: string;
-    description: string;
-    category: string;
-    status: "Completed" | "In Progress" | "On Hold" | "Pending";
-    createdAt: string;
-}
+// // Project type
+// interface Project {
+//     id: string;
+//     name: string;
+//     description: string;
+//     category: string;
+//     status: "Completed" | "In Progress" | "On Hold" | "Pending";
+//     createdAt: string;
+// }
 
-// Static project data
-const projects: Project[] = [
-    {
-        id: "PRJ-001",
-        name: "Portfolio Website",
-        description: "Personal portfolio with admin dashboard",
-        category: "Web Development",
-        status: "Completed",
-        createdAt: "2026-10-20",
-    },
-    {
-        id: "PRJ-002",
-        name: "E-commerce Platform",
-        description: "Online shopping and product management",
-        category: "E-commerce",
-        status: "In Progress",
-        createdAt: "2026-10-22",
-    },
-    {
-        id: "PRJ-003",
-        name: "Task Management",
-        description: "Team collaboration and task tracking",
-        category: "SaaS",
-        status: "On Hold",
-        createdAt: "2026-10-25",
-    },
-    {
-        id: "PRJ-004",
-        name: "CRM Dashboard",
-        description: "Customer relationship management system",
-        category: "Dashboard",
-        status: "Pending",
-        createdAt: "2026-10-28",
-    },
-    {
-        id: "PRJ-005",
-        name: "Resume Builder",
-        description: "Dynamic resume creation platform",
-        category: "Web Development",
-        status: "Completed",
-        createdAt: "2026-11-01",
-    },
-];
+// // Static project data
+// const projects: Project[] = [
+//     {
+//         id: "PRJ-001",
+//         name: "Portfolio Website",
+//         description: "Personal portfolio with admin dashboard",
+//         category: "Web Development",
+//         status: "Completed",
+//         createdAt: "2026-10-20",
+//     },
+//     {
+//         id: "PRJ-002",
+//         name: "E-commerce Platform",
+//         description: "Online shopping and product management",
+//         category: "E-commerce",
+//         status: "In Progress",
+//         createdAt: "2026-10-22",
+//     },
+//     {
+//         id: "PRJ-003",
+//         name: "Task Management",
+//         description: "Team collaboration and task tracking",
+//         category: "SaaS",
+//         status: "On Hold",
+//         createdAt: "2026-10-25",
+//     },
+//     {
+//         id: "PRJ-004",
+//         name: "CRM Dashboard",
+//         description: "Customer relationship management system",
+//         category: "Dashboard",
+//         status: "Pending",
+//         createdAt: "2026-10-28",
+//     },
+//     {
+//         id: "PRJ-005",
+//         name: "Resume Builder",
+//         description: "Dynamic resume creation platform",
+//         category: "Web Development",
+//         status: "Completed",
+//         createdAt: "2026-11-01",
+//     },
+// ];
 
 // Status badge
 const StatusBadge = ({ status }: { status: Project["status"] }) => {
@@ -83,23 +85,24 @@ const StatusBadge = ({ status }: { status: Project["status"] }) => {
     );
 };
 
-export default function ProjectTable() {
+export default function ProjectTable({ projects }: { projects: Project[] }) {
+    const router = useRouter();
     // Row actions
     const handleView = (project: Project) => {
         console.log("View project:", project);
     };
 
-    const handleEdit = (project: Project) => {
-        console.log("Edit project:", project);
-    };
+    const handleEdit = useCallback((project: Project) => {
+        router.push(`/admin/projects/${project.id}/edit`);
+    }, [router]);
 
     const handleDelete = (project: Project) => {
         console.log("Delete project:", project);
     };
 
-    const handleAdd = () => {
-        console.log("Add new project");
-    };
+    const handleAdd = useCallback(() => {
+        router.push("/admin/projects/create");
+    }, [router]);
 
     const handleFilter = () => {
         console.log("Open project filters");
@@ -115,8 +118,8 @@ export default function ProjectTable() {
                 flex: 0.8,
             },
             {
-                field: "name",
                 headerName: "Project Name",
+                field: "title",
                 minWidth: 170,
                 flex: 1.2,
             },
@@ -150,7 +153,7 @@ export default function ProjectTable() {
             },
 
             // Reusable actions column
-            createActionColumn<Project>({
+            createActionColumn({
                 onView: handleView,
                 onEdit: handleEdit,
                 onDelete: handleDelete,
@@ -170,10 +173,11 @@ export default function ProjectTable() {
             toolbar={{
                 addButtonLabel: "Add Project",
                 searchPlaceholder: "Search projects...",
-                
+
                 onAdd: handleAdd,
                 onFilterClick: handleFilter,
             }}
+            loading={false}
         />
     );
 }

@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 
 import {
     DateField,
+    MultiSelectField,
+    RichTextEditor,
     SelectField,
     TextareaField,
     TextField,
@@ -27,6 +29,14 @@ const ROLE_OPTIONS: SelectOption[] = [
     { value: "student", label: "Student" },
     { value: "other", label: "Other" },
 ];
+
+const TECH_OPTIONS: SelectOption[] = [
+    { value: "nextjs", label: "Next.js" },
+    { value: "typescript", label: "TypeScript" },
+    { value: "tailwind", label: "Tailwind CSS" },
+    { value: "firebase", label: "Firebase" },
+];
+
 
 const BIO_MAX = 300;
 
@@ -51,6 +61,8 @@ const ExampleForm = () => {
             role: "",
             birthDate: undefined,
             bio: "",
+            description: "",
+            technologies: [],
         },
 
         mode: "onSubmit",
@@ -213,6 +225,29 @@ const ExampleForm = () => {
                     )}
                 />
 
+                <Controller
+                    name="technologies"
+                    control={control}
+                    render={({ field }) => (
+                        <MultiSelectField
+                            id="project-technologies"
+                            name={field.name}
+                            label="Technologies"
+                            placeholder="Select technologies"
+                            variant="outlined"
+                            options={TECH_OPTIONS}
+                            creatable
+                            required
+                            className="sm:col-span-2"
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            disabled={isSubmitting}
+                            error={errors.technologies?.message}
+                        />
+                    )}
+                />
+
                 {/* Bio */}
                 <Controller
                     name="bio"
@@ -233,6 +268,27 @@ const ExampleForm = () => {
                             onBlur={field.onBlur}
                             disabled={isSubmitting}
                             error={errors.bio?.message}
+                        />
+                    )}
+                />
+
+                {/* Description (rich text) */}
+                <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => (
+                        <RichTextEditor
+                            id="example-description"
+                            name={field.name}
+                            label="Description"
+                            placeholder="Write something…"
+                            required
+                            className="sm:col-span-2"
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            disabled={isSubmitting}
+                            error={errors.description?.message}
                         />
                     )}
                 />

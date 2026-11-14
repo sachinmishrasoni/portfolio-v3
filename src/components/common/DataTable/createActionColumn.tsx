@@ -12,7 +12,7 @@ export interface CreateActionColumnProps<TData>
 }
 
 export const createActionColumn = <TData,>({
-    pinned = "",
+    pinned = "right",
     headerName = "Actions",
     minWidth = 70,
     onView,
@@ -27,8 +27,8 @@ export const createActionColumn = <TData,>({
         headerName,
         colId: "actions",
         // width: 50,
-        minWidth: 80,
-        maxWidth: 80,
+        minWidth: 50,
+        maxWidth: 50,
         pinned: pinned || undefined,
         sortable: false,
         filter: false,

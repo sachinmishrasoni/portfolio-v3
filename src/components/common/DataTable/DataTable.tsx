@@ -57,48 +57,54 @@ export function DataTable<TData>({
         resizable: true,
     }), []);
 
+    const loadingRows = useMemo(() => {
+        return { rowCount: 10 };
+    }, []);
+
+
     return (
         <Paper className="space-y-4">
             {/* <div className={`w-full space-y-4 ${className ?? ""}`}> */}
-                <DataTableToolbar
-                    title={title}
-                    addButtonLabel={addButtonLabel}
-                    searchPlaceholder={searchPlaceholder}
-                    searchValue={searchValue}
-                    showSearch={showSearch}
-                    showFilter={showFilter}
-                    showAddButton={showAddButton}
-                    onSearchChange={setSearchValue}
-                    onAdd={onAdd}
-                    onFilterClick={onFilterClick}
-                />
+            <DataTableToolbar
+                title={title}
+                addButtonLabel={addButtonLabel}
+                searchPlaceholder={searchPlaceholder}
+                searchValue={searchValue}
+                showSearch={showSearch}
+                showFilter={showFilter}
+                showAddButton={showAddButton}
+                onSearchChange={setSearchValue}
+                onAdd={onAdd}
+                onFilterClick={onFilterClick}
+            />
 
-                <AgGridProvider modules={modules}>
-                    <div className="h-[400px] w-full">
-                        <AgGridReact<TData>
-                            theme={gridTheme}
-                            rowData={data}
-                            columnDefs={columns}
-                            defaultColDef={defaultColDef}
-                            quickFilterText={searchValue}
-                            suppressCellFocus
-                            loading={loading}
-                            pagination
-                            paginationPageSize={pageSize}
-                            paginationPageSizeSelector={pageSizeOptions}
-                            domLayout="normal"
-                            getRowId={(params) => {
-                                const row = params.data as
-                                    | (TData & { id?: string | number })
-                                    | undefined;
+            <AgGridProvider modules={modules}>
+                <div className="h-[512px] w-full">
+                    <AgGridReact<TData>
+                        theme={gridTheme}
+                        rowData={data}
+                        columnDefs={columns}
+                        defaultColDef={defaultColDef}
+                        quickFilterText={searchValue}
+                        suppressCellFocus
+                        loading={loading}
+                        loadingRows={loadingRows}
+                        pagination
+                        paginationPageSize={pageSize}
+                        paginationPageSizeSelector={pageSizeOptions}
+                        domLayout="normal"
+                        getRowId={(params) => {
+                            const row = params.data as
+                                | (TData & { id?: string | number })
+                                | undefined;
 
-                                return row?.id != null
-                                    ? String(row.id)
-                                    : String(params.data);
-                            }}
-                        />
-                    </div>
-                </AgGridProvider>
+                            return row?.id != null
+                                ? String(row.id)
+                                : String(params.data);
+                        }}
+                    />
+                </div>
+            </AgGridProvider>
             {/* </div> */}
         </Paper>
     );

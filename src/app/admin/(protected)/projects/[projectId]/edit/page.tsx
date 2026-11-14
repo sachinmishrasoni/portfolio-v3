@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import ProjectForm from "@/features/admin/projects/components/ProjectForm";
+import ProjectForm from "@/features/admin/projects/components/form/ProjectForm";
 import Paper from "@/components/common/Paper";
 import PageHeader from "@/components/common/PageHeader";
 
@@ -12,7 +12,7 @@ import PageHeader from "@/components/common/PageHeader";
 const EditProjectPage: React.FC = () => {
     const router = useRouter();
     const { projectId } = useParams<{ projectId: string }>();
-
+    console.log("projectId", projectId);
 
     const [project, setProject] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -37,13 +37,13 @@ const EditProjectPage: React.FC = () => {
         router.push("/admin/projects");
     };
 
-    if (loading) {
-        return <div>Loading project...</div>;
-    }
+    // if (loading) {
+    //     return <div>Loading project...</div>;
+    // }
 
-    if (!project) {
-        return <div>Project not found.</div>;
-    }
+    // if (!project) {
+    //     return <div>Project not found.</div>;
+    // }
 
     return (
         <div className="space-y-6">
