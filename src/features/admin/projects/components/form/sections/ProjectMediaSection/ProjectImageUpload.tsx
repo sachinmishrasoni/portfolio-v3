@@ -193,8 +193,8 @@ const ProjectImageUpload = () => {
                     </span>
                 </div>
 
-                <div className="w-full overflow-hidden">
-                    <div className="flex gap-3 overflow-x-auto pb-3">
+                <div className="w-full overflow-hidden mb-0">
+                    <div className="flex gap-3 overflow-x-auto pb-0">
                         {imageFiles.map((file, index) => (
                             <div
                                 key={`${file.name}-${index}`}
@@ -240,7 +240,9 @@ const ProjectImageUpload = () => {
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     multiple
-                    className="hidden"
+                    // className="hidden"
+                    hidden
+                    style={{ display: "none" }}
                     disabled={isSubmitting}
                     onChange={handleGalleryChange}
                 />

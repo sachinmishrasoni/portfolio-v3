@@ -2,18 +2,10 @@
 
 import { useMemo } from "react";
 import type { ColDef } from "ag-grid-community";
-import { MoreHorizontal } from "lucide-react";
 
 import { DataTable } from "@/components/common/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 type Project = {
   id: string;
@@ -125,36 +117,6 @@ export default function TablePage() {
         filter: false,
         resizable: false,
         width: 100,
-        // cellRenderer: (params: { data: Project }) => (
-        //   <DropdownMenu>
-        //     <DropdownMenuTrigger>
-        //       <Button variant="ghost" size="icon">
-        //         <MoreHorizontal className="h-4 w-4" />
-        //       </Button>
-        //     </DropdownMenuTrigger>
-
-        //     <DropdownMenuContent align="end">
-        //       <DropdownMenuItem
-        //         onClick={() => handleView(params.data)}
-        //       >
-        //         View
-        //       </DropdownMenuItem>
-
-        //       <DropdownMenuItem
-        //         onClick={() => handleEdit(params.data)}
-        //       >
-        //         Edit
-        //       </DropdownMenuItem>
-
-        //       <DropdownMenuItem
-        //         className="text-destructive"
-        //         onClick={() => handleDelete(params.data)}
-        //       >
-        //         Delete
-        //       </DropdownMenuItem>
-        //     </DropdownMenuContent>
-        //   </DropdownMenu>
-        // ),
       },
     ],
     [],
@@ -166,13 +128,7 @@ export default function TablePage() {
         title="Project Management"
         columns={columns}
         data={projects}
-        // getRowId={(project) => project.id}
-        addButtonLabel="Add Project"
-        searchPlaceholder="Search projects..."
-        pageSize={10}
-        pageSizeOptions={[5, 10, 20, 50]}
-        onAdd={() => console.log("Add project")}
-        onFilterClick={() => console.log("Open filters")}
+        
       />
     </div>
   );

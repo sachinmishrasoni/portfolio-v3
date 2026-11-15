@@ -14,6 +14,7 @@ const CreateProjectPage: React.FC = () => {
     const handleSubmit = async (values: any) => {
         try {
             // Call createProject service here
+            console.log("values", values);
             await createProject(values);
             toast.success("Project created successfully");
             // router.push("/admin/projects");

@@ -4,7 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { redirect } from "next/navigation";
 
 import LoginForm from "@/features/admin/auth/LoginForm";
-import { requireAdmin } from "@/features/admin/auth/require-admin";
+import { requireAdmin } from "@/lib/auth/require.admin";
 
 // Allow blocking, request-time rendering
 export const instant = false;

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import ProjectForm from "@/features/admin/projects/components/form/ProjectForm";
-import Paper from "@/components/common/Paper";
 import PageHeader from "@/components/common/PageHeader";
 
 // Import your project service and Project type
@@ -52,13 +51,11 @@ const EditProjectPage: React.FC = () => {
                 description="Update your portfolio project details."
             />
 
-            <Paper className="p-5">
-                <ProjectForm
-                    initialData={project}
-                    onSubmit={handleSubmit}
-                    onCancel={() => router.back()}
-                />
-            </Paper>
+            <ProjectForm
+                initialData={project}
+                onSubmit={handleSubmit}
+                onCancel={() => router.back()}
+            />
         </div>
     );
 };

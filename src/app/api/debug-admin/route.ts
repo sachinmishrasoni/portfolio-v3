@@ -14,7 +14,7 @@ export async function GET() {
     };
 
     try {
-        const { adminAuth } = await import("@/lib/firebase-admin");
+        const { adminAuth } = await import("@/lib/firebase/admin");
         await adminAuth.listUsers(1);
         return NextResponse.json({ ok: true, env });
     } catch (e) {

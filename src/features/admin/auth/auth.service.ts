@@ -1,4 +1,4 @@
-import { auth, googleProvider } from "@/lib/firebase";
+import { auth, googleProvider } from "@/lib/firebase/client";
 import { deleteUser, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 
 

@@ -22,10 +22,7 @@ export const mapProjectToForm = (
     status: project.status,
 
     thumbnailUrl: project.thumbnail?.url ?? "",
-    thumbnailAlt: project.thumbnail?.alt ?? "",
-
-    imageUrls:
-        project.images?.map((image) => image.url).join("\n") ?? "",
+    imageUrls: project.images?.map((image) => image.url).join("\n") ?? "",
 
     technologies: project.technologies ?? [],
     features: project.features ?? [],

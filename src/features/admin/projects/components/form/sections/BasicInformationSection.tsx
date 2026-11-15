@@ -31,10 +31,10 @@ const PROJECT_TYPE_OPTIONS: SelectOption[] = [
 ];
 
 const STATUS_OPTIONS: SelectOption[] = [
-    { value: "Completed", label: "Completed" },
-    { value: "In Progress", label: "In Progress" },
-    { value: "On Hold", label: "On Hold" },
-    { value: "Archived", label: "Archived" },
+    { value: "completed", label: "Completed" },
+    { value: "in-progress", label: "In Progress" },
+    { value: "on-hold", label: "On Hold" },
+    { value: "archived", label: "Archived" },
 ];
 
 interface Props {

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import AdminShell from '@/components/layout/admin/AdminShell';
-import { requireAdmin } from '@/features/admin/auth/require-admin';
+import { requireAdmin } from "@/lib/auth/require.admin";
 
 export const metadata: Metadata = {
     title: { default: 'Admin', template: '%s · Admin' },

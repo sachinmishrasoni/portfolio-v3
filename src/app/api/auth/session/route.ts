@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth } from "@/lib/firebase-admin";
+import { adminAuth } from "@/lib/firebase/admin";
 
 const EXPIRES_IN = 5 * 24 * 60 * 60 * 1000;
 

@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import SitePreloader from "@/components/common/SitePreloader";
 import QueryProvider from "@/providers/QueryProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -39,7 +40,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <QueryProvider>
-            <SitePreloader />
+            <Suspense fallback={null}>
+              <SitePreloader />
+            </Suspense>
             <TooltipProvider>
               {children}
             </TooltipProvider>

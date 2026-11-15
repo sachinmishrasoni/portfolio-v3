@@ -262,13 +262,6 @@ const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor, disabled, cla
                 onScroll={updateScroll}
                 role="toolbar"
                 aria-label="Text formatting"
-                // className={cn(
-                //     'flex flex-nowrap items-center gap-0.5 overflow-x-auto px-2 py-1.5',
-                //     // Hide the scrollbar (still scrolls with touch, wheel and the arrows)
-                //     '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
-                //     // Stop the buttons from squeezing together
-                //     '[&>*]:shrink-0',
-                // )}
                 className={cn(
                     'scrollbar-hide flex flex-nowrap items-center gap-0.5 overflow-x-auto px-2 py-1.5',
                     // Stop the buttons from squeezing together
