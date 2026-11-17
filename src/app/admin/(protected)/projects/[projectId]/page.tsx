@@ -11,7 +11,7 @@ const ProjectDetailPage = () => {
     const { projectId } = useParams<{ projectId: string }>();
 
     const { data: project, isLoading, error } = useProject(projectId);
-    console.log("project", project);
+    // console.log("project", project);
 
     if (isLoading) return <div>Loading project...</div>;
     if (error || !project) return <div>Project not found.</div>;
