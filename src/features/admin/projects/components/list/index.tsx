@@ -9,62 +9,9 @@ import {
     DataTable,
     createActionColumn,
 } from "@/components/common/DataTable";
-import { Project } from "../projects.types";
+import { Project } from "../../projects.types";
 import { useRouter } from "next/navigation";
 
-// // Project type
-// interface Project {
-//     id: string;
-//     name: string;
-//     description: string;
-//     category: string;
-//     status: "Completed" | "In Progress" | "On Hold" | "Pending";
-//     createdAt: string;
-// }
-
-// // Static project data
-// const projects: Project[] = [
-//     {
-//         id: "PRJ-001",
-//         name: "Portfolio Website",
-//         description: "Personal portfolio with admin dashboard",
-//         category: "Web Development",
-//         status: "Completed",
-//         createdAt: "2026-10-20",
-//     },
-//     {
-//         id: "PRJ-002",
-//         name: "E-commerce Platform",
-//         description: "Online shopping and product management",
-//         category: "E-commerce",
-//         status: "In Progress",
-//         createdAt: "2026-10-22",
-//     },
-//     {
-//         id: "PRJ-003",
-//         name: "Task Management",
-//         description: "Team collaboration and task tracking",
-//         category: "SaaS",
-//         status: "On Hold",
-//         createdAt: "2026-10-25",
-//     },
-//     {
-//         id: "PRJ-004",
-//         name: "CRM Dashboard",
-//         description: "Customer relationship management system",
-//         category: "Dashboard",
-//         status: "Pending",
-//         createdAt: "2026-10-28",
-//     },
-//     {
-//         id: "PRJ-005",
-//         name: "Resume Builder",
-//         description: "Dynamic resume creation platform",
-//         category: "Web Development",
-//         status: "Completed",
-//         createdAt: "2026-11-01",
-//     },
-// ];
 
 // Status badge
 const StatusBadge = ({ status }: { status: Project["status"] }) => {
@@ -86,12 +33,13 @@ const StatusBadge = ({ status }: { status: Project["status"] }) => {
     );
 };
 
-export default function ProjectTable({ projects }: { projects: Project[] }) {
+export default function ProjectList({ projects, loading }: { projects: Project[], loading: boolean }) {
     const router = useRouter();
-    // Row actions
-    const handleView = (project: Project) => {
-        console.log("View project:", project);
-    };
+
+
+    const handleView = useCallback((project: Project) => {
+        router.push(`/admin/projects/${project.id}`);
+    }, [router]);
 
     const handleEdit = useCallback((project: Project) => {
         router.push(`/admin/projects/${project.id}/edit`);
@@ -113,8 +61,8 @@ export default function ProjectTable({ projects }: { projects: Project[] }) {
     const columns = useMemo<ColDef<Project>[]>(
         () => [
             {
-                field: "id",
                 headerName: "Project ID",
+                field: "projectId",
                 minWidth: 115,
                 flex: 0.8,
             },
@@ -125,11 +73,11 @@ export default function ProjectTable({ projects }: { projects: Project[] }) {
                 flex: 1.2,
             },
             {
-                field: "description",
-                headerName: "Description",
+                field: "overview",
+                headerName: "Overview",
                 minWidth: 230,
                 flex: 1.8,
-                tooltipField: "description",
+                tooltipField: "overview",
             },
             {
                 field: "category",
@@ -178,7 +126,7 @@ export default function ProjectTable({ projects }: { projects: Project[] }) {
                 onAdd: handleAdd,
                 onFilterClick: handleFilter,
             }}
-            loading={false}
+            loading={loading}
         />
     );
 }

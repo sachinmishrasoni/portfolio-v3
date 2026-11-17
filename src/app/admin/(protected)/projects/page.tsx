@@ -1,13 +1,14 @@
 "use client";
-import ProjectTable from '@/features/admin/projects/components/ProjectTable'
+import ProjectList from '@/features/admin/projects/components/list';
 import { useProjects } from '@/features/admin/projects/useProjects';
 
 export default function Projects() {
-  const {data: projects = [], isLoading, isError, refetch} = useProjects();
-  console.log("projects", projects);
+  const { data: projects = [], isLoading, isError, refetch } = useProjects();
+  // console.log("projects", projects);
   return (
-    <div>
-      <ProjectTable  projects={projects} />
-    </div>
+    <ProjectList
+      projects={projects}
+      loading={isLoading}
+    />
   )
 };

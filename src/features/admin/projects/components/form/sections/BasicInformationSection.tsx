@@ -73,18 +73,20 @@ const BasicInformationSection = ({ projectId }: Props) => {
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 {/* Project ID */}
-                <TextField
-                    variant="outlined"
-                    id="project-id"
-                    name="project-id"
-                    label="Project ID"
-                    placeholder="Generated automatically"
-                    required
-                    value={projectId ?? "Generated automatically"}
-                    onChange={() => { }}
-                    // onBlur={field.onBlur}
-                    disabled={true}
-                />
+                {false && (
+                    <TextField
+                        variant="outlined"
+                        id="project-id"
+                        name="project-id"
+                        label="Project ID"
+                        placeholder="Generated automatically"
+                        required
+                        value={projectId ?? "Generated automatically"}
+                        onChange={() => { }}
+                        // onBlur={field.onBlur}
+                        disabled={true}
+                    />
+                )}
 
                 {/* Title */}
                 <Controller

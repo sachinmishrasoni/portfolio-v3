@@ -1,7 +1,13 @@
+
 import "server-only";
 
+import type {
+    UploadApiErrorResponse,
+    UploadApiResponse,
+} from "cloudinary";
+
 import cloudinary from "@/lib/cloudinary";
-import type { CloudinaryUploadResult } from "@/types/image.types";
+import type { CloudinaryProjectImage } from "@/features/admin/projects/projects.types";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -20,7 +26,7 @@ type UploadImageInput = {
 export const uploadImage = async ({
     file,
     folder = "portfolio",
-}: UploadImageInput): Promise<CloudinaryUploadResult> => {
+}: UploadImageInput): Promise<CloudinaryProjectImage> => {
     if (!ALLOWED_MIME_TYPES.includes(file.type)) {
         throw new Error("Only JPEG, PNG, WEBP and AVIF images are allowed");
     }
@@ -31,16 +37,25 @@ export const uploadImage = async ({
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const result = await new Promise<any>((resolve, reject) => {
+    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
         cloudinary.uploader
             .upload_stream(
-                {
-                    folder,
-                    resource_type: "image",
-                },
-                (error, uploadResult) => {
-                    if (error) reject(error);
-                    else resolve(uploadResult);
+                { folder, resource_type: "image" },
+                (
+                    error: UploadApiErrorResponse | undefined,
+                    uploadResult: UploadApiResponse | undefined
+                ) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    if (!uploadResult) {
+                        reject(new Error("Cloudinary upload returned no result"));
+                        return;
+                    }
+
+                    resolve(uploadResult);
                 }
             )
             .end(buffer);
@@ -48,8 +63,9 @@ export const uploadImage = async ({
 
     return {
         url: result.secure_url,
+        source: "cloudinary",
         publicId: result.public_id,
-        assetId: result.asset_id,
+        ...(result.asset_id ? { assetId: result.asset_id } : {}),
     };
 };
 

@@ -1,4 +1,48 @@
+
 import { z } from "zod";
+
+// Project image schema for existing images
+export const projectImageSchema = z.discriminatedUnion("source", [
+    z.object({
+        url: z.string().url("Invalid image URL"),
+        source: z.literal("cloudinary"),
+        publicId: z.string().min(1, "Public ID is required"),
+        assetId: z.string().optional(),
+    }),
+
+    z.object({
+        url: z.string().url("Invalid image URL"),
+        source: z.literal("external"),
+    }),
+]);
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_GALLERY_IMAGES = 10;
+
+const ALLOWED_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/avif",
+];
+
+// Image file validation
+const imageFileSchema = z
+    .instanceof(File)
+    .refine(
+        (file) => ALLOWED_IMAGE_TYPES.includes(file.type),
+        "Only JPEG, PNG, WebP and AVIF images are allowed"
+    )
+    .refine(
+        (file) => file.size <= MAX_FILE_SIZE,
+        "Image size must be less than 5 MB"
+    );
+
+// Form image can be a new file or existing image
+const formImageSchema = z.union([
+    imageFileSchema,
+    projectImageSchema,
+]);
 
 export const projectFormSchema = z
     .object({
@@ -17,11 +61,9 @@ export const projectFormSchema = z
             .trim()
             .min(1, "Overview is required")
             .max(200, "Maximum 200 characters"),
-
         description: z.string().trim().min(1, "Description is required"),
-        category: z.string().min(1, "Category is required"),
+        category: z.string().trim().min(1, "Category is required"),
         projectType: z.enum(["professional", "personal"]),
-
         status: z.enum([
             "completed",
             "in-progress",
@@ -31,20 +73,23 @@ export const projectFormSchema = z
 
         // Project media
         mediaMode: z.enum(["image", "url"]).default("image"),
-        thumbnailFile: z.instanceof(File).nullable().default(null),
-        imageFiles: z.array(z.instanceof(File)).default([]),
-        thumbnailUrl: z.string().default(""),
-        imageUrls: z.string().default(""),
+        thumbnail: formImageSchema.nullable().default(null),
+        images: z
+            .array(formImageSchema)
+            .max(MAX_GALLERY_IMAGES, "Maximum 10 gallery images allowed")
+            .default([]),
 
         // Project details
-        technologies: z.array(z.string()).min(1, "Select at least one technology"),
+        technologies: z
+            .array(z.string())
+            .min(1, "Select at least one technology"),
         features: z.array(z.string()).default([]),
         role: z.string().optional().default(""),
         challenges: z.string().optional().default(""),
         solution: z.string().optional().default(""),
 
         // Project timeline
-        startDate: z.date().optional(),
+        startDate: z.date(),
         endDate: z.date().optional(),
 
         // Project links
@@ -52,7 +97,6 @@ export const projectFormSchema = z
             z.literal(""),
             z.string().url("Enter a valid live URL"),
         ]).default(""),
-
         githubUrl: z.union([
             z.literal(""),
             z.string().url("Enter a valid GitHub URL"),
@@ -65,21 +109,15 @@ export const projectFormSchema = z
 
         // SEO settings
         metaTitle: z.string().optional().default(""),
-        metaDescription: z.string().max(160, "Maximum 160 characters").optional().default(""),
+        metaDescription: z
+            .string()
+            .max(160, "Maximum 160 characters")
+            .optional()
+            .default(""),
     })
     .superRefine((data, ctx) => {
-        // Validate start date
-        if (!data.startDate) {
-            ctx.addIssue({
-                code: "custom",
-                path: ["startDate"],
-                message: "Start date is required",
-            });
-        }
-
         // Validate date range
         if (
-            data.startDate &&
             data.endDate &&
             data.endDate.getTime() < data.startDate.getTime()
         ) {
@@ -99,20 +137,78 @@ export const projectFormSchema = z
             });
         }
 
-        // Validate thumbnail based on media mode
-        if (data.mediaMode === "image" && !data.thumbnailFile) {
+        // Require thumbnail
+        if (!data.thumbnail) {
             ctx.addIssue({
                 code: "custom",
-                path: ["thumbnailFile"],
+                path: ["thumbnail"],
                 message: "Thumbnail is required",
             });
         }
 
-        if (data.mediaMode === "url" && !z.string().url().safeParse(data.thumbnailUrl).success) {
-            ctx.addIssue({
-                code: "custom",
-                path: ["thumbnailUrl"],
-                message: "Enter a valid thumbnail URL",
+        // Validate media source according to selected mode
+        if (data.mediaMode === "image") {
+            // Validate thumbnail
+            if (
+                data.thumbnail &&
+                !(data.thumbnail instanceof File) &&
+                data.thumbnail.source !== "cloudinary"
+            ) {
+                ctx.addIssue({
+                    code: "custom",
+                    path: ["thumbnail"],
+                    message: "Please use a Cloudinary image",
+                });
+            }
+
+            // Validate gallery images
+            data.images.forEach((image, index) => {
+                if (
+                    !(image instanceof File) &&
+                    image.source !== "cloudinary"
+                ) {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["images", index],
+                        message: "Only Cloudinary images are allowed",
+                    });
+                }
+            });
+        }
+
+        if (data.mediaMode === "url") {
+            // External URL mode does not accept uploaded files
+            if (data.thumbnail instanceof File) {
+                ctx.addIssue({
+                    code: "custom",
+                    path: ["thumbnail"],
+                    message: "Please use an external thumbnail URL",
+                });
+            }
+
+            if (
+                data.thumbnail &&
+                !(data.thumbnail instanceof File) &&
+                data.thumbnail.source !== "external"
+            ) {
+                ctx.addIssue({
+                    code: "custom",
+                    path: ["thumbnail"],
+                    message: "Please use an external thumbnail URL",
+                });
+            }
+
+            data.images.forEach((image, index) => {
+                if (
+                    image instanceof File ||
+                    image.source !== "external"
+                ) {
+                    ctx.addIssue({
+                        code: "custom",
+                        path: ["images", index],
+                        message: "Only external image URLs are allowed",
+                    });
+                }
             });
         }
     });

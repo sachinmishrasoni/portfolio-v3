@@ -13,12 +13,13 @@ import {
     updateDoc,
 } from "firebase/firestore";
 import { Project } from "./projects.types";
+import { generateProjectId } from "./project.utils";
 
 const COLLECTION_NAME = "projects";
 const projectsCollection = collection(db, COLLECTION_NAME);
 
 // Fields managed by Firestore / the service, never supplied by callers
-export type ProjectInput = Omit<Project, "id" | "createdAt" | "updatedAt">;
+export type ProjectInput = Omit<Project, "id" | "projectId" | "createdAt" | "updatedAt">;
 
 // Convert Firestore timestamps into serializable ISO strings.
 function toISOString(value: unknown): string | undefined {
@@ -52,6 +53,7 @@ function stripUndefined<T extends object>(obj: T): T {
 const mapProject = (id: string, data: Record<string, unknown>): Project => ({
     ...(data as ProjectInput),
     id,
+    projectId: data.projectId as string,
     createdAt: toDate(data.createdAt),
     updatedAt: toDate(data.updatedAt),
 });
@@ -59,8 +61,11 @@ const mapProject = (id: string, data: Record<string, unknown>): Project => ({
 // CREATE PROJECT
 export const createProject = async (projectData: ProjectInput) => {
     try {
+        const projectId = generateProjectId();
+
         const docRef = await addDoc(projectsCollection, {
             ...stripUndefined(projectData),
+            projectId,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         });

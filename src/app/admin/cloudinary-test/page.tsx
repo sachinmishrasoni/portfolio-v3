@@ -29,7 +29,7 @@ export default function CloudinaryTestPage() {
                 "portfolio/test"
             );
 
-            setImage(result);
+            setImage(result as CloudinaryUploadResult);
             setMessage("Image uploaded successfully!");
         } catch (error) {
             setMessage(

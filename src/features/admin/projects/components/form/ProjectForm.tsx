@@ -2,12 +2,10 @@
 "use client";
 
 import { useEffect } from "react";
-
 import {
     FormProvider,
     useForm,
 } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { Project } from "../../projects.types";
@@ -37,6 +35,7 @@ interface ProjectFormProps {
 }
 
 const DEFAULT_VALUES: ProjectFormInput = {
+    // Basic information
     title: "",
     slug: "",
     overview: "",
@@ -45,29 +44,32 @@ const DEFAULT_VALUES: ProjectFormInput = {
     projectType: "personal",
     status: "in-progress",
 
+    // Project media
     mediaMode: "image",
-    thumbnailFile: null,
-    imageFiles: [],
+    thumbnail: null,
+    images: [],
 
-    thumbnailUrl: "",
-    imageUrls: "",
-
+    // Project details
     technologies: [],
     features: [],
     role: "",
     challenges: "",
     solution: "",
 
-    startDate: undefined,
+    // Project timeline
+    startDate: new Date(),
     endDate: undefined,
 
+    // Project links
     liveUrl: "",
     githubUrl: "",
 
+    // Publishing settings
     featured: false,
     published: false,
     displayOrder: 0,
 
+    // SEO settings
     metaTitle: "",
     metaDescription: "",
 };
@@ -94,7 +96,7 @@ const ProjectForm = ({
         formState: { isSubmitting },
     } = methods;
 
-    // Populate form when editing an existing project.
+    // Populate form when editing an existing project
     useEffect(() => {
         if (initialData) {
             reset(mapProjectToForm(initialData));
@@ -115,23 +117,27 @@ const ProjectForm = ({
                 className="w-full space-y-4"
             >
                 <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
-
-                    {/* LEFT COLUMN */}
+                    {/* Left column */}
                     <div className="space-y-4 xl:col-span-8">
                         <BasicInformationSection
                             projectId={initialData?.projectId}
                         />
 
                         <ProjectContentSection />
+
                         <ProjectDetailsSection />
                     </div>
 
-                    {/* RIGHT COLUMN */}
+                    {/* Right column */}
                     <div className="space-y-4 xl:col-span-4">
                         <ProjectMediaSection />
+
                         <ProjectTimelineSection />
+
                         <ProjectLinksSection />
+
                         <PublishingSettingsSection />
+
                         <ProjectSEOSection />
                     </div>
                 </div>

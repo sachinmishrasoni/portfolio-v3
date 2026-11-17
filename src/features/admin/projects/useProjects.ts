@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { getProjects } from "./projects.service";
+import { getProjectById, getProjects } from "./projects.service";
 
 export const projectKeys = {
     all: ["projects"] as const,
@@ -10,9 +10,19 @@ export const projectKeys = {
         [...projectKeys.details(), id] as const,
 };
 
+// Fetch all projects
 export const useProjects = () => {
     return useQuery({
         queryKey: projectKeys.lists(),
         queryFn: getProjects,
+    });
+};
+
+// Fetch single project
+export const useProject = (id: string) => {
+    return useQuery({
+        queryKey: projectKeys.detail(id),
+        queryFn: () => getProjectById(id),
+        enabled: Boolean(id),
     });
 };
