@@ -1,6 +1,6 @@
+
 "use client";
 
-import { useState } from "react";
 import {
     FiFileText,
     FiImage,
@@ -8,8 +8,11 @@ import {
     FiSearch,
 } from "react-icons/fi";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CommonTabs, {
+    type TabItem,
+} from "@/components/common/CommonTabs";
 
+import ProjectBanner from "./sections/ProjectBanner";
 import Overview from "./sections/Overview";
 import ProjectGallery from "./sections/ProjectGallery";
 import ProjectInformation from "./sections/ProjectInformation";
@@ -25,27 +28,48 @@ interface ProjectDetailsProps {
 }
 
 const ProjectDetails = ({ data }: ProjectDetailsProps) => {
-    const [activeTab, setActiveTab] = useState("overview");
-
-    const tabs = [
+    const tabs: TabItem[] = [
         {
             value: "overview",
             label: "Overview",
             icon: FiFileText,
-            component: <Overview data={data} />,
+            content: (
+                <div className="space-y-4">
+                    <Overview data={data} />
+                    <ProjectGallery data={data} />
+                </div>
+            ),
         },
         {
             value: "media",
-            label: `Media (${data.images.length + 1})`,
+            label: "Media",
+            count: data.images.length + 1,
             icon: FiImage,
-            component: <ProjectGallery data={data} />,
+            content: <ProjectGallery data={data} />,
         },
         {
             value: "technical",
             label: "Technical",
+            shortLabel: "Tech",
             icon: FiCode,
-            component: (
+            content: (
                 <div className="space-y-4">
+                    {/* Technology Stack */}
+                    <div className="rounded-xl border bg-card p-5">
+                        <h3 className="mb-4 font-semibold">Technology Stack</h3>
+
+                        <div className="flex flex-wrap gap-2">
+                            {data.technologies.map((technology) => (
+                                <span
+                                    key={technology}
+                                    className="rounded-md border bg-background px-3 py-2 text-sm"
+                                >
+                                    {technology}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
                     <ProjectLinks data={data} />
                 </div>
             ),
@@ -54,101 +78,34 @@ const ProjectDetails = ({ data }: ProjectDetailsProps) => {
             value: "seo",
             label: "SEO",
             icon: FiSearch,
-            component: <SEOSection data={data} />,
+            content: <SEOSection data={data} />,
         },
     ];
 
     return (
-        <div className="space-y-5">
-            {/* Project Banner */}
-            <div className="rounded-xl border bg-card p-4">
-                <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2">
-                    <div className="overflow-hidden rounded-lg">
-                        <img
-                            src={data.thumbnail.url}
-                            alt={data.title}
-                            className="h-56 w-full object-cover"
-                        />
-                    </div>
+        <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(300px,0.9fr)]">
 
-                    <div className="space-y-3">
-                        <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                            {data.projectId}
-                        </span>
+            {/* Left Content */}
+            <main className="min-w-0 space-y-4">
 
-                        <h2 className="text-2xl font-bold">{data.title}</h2>
+                {/* Project Banner */}
+                <ProjectBanner data={data} />
 
-                        <p className="text-sm text-muted-foreground">
-                            {data.overview}
-                        </p>
+                {/* Project Tabs and Content */}
+                <CommonTabs
+                    tabs={tabs}
+                    defaultValue="overview"
+                />
+            </main>
 
-                        <div className="flex flex-wrap gap-2">
-                            <span className="rounded-md bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                                {data.status}
-                            </span>
-
-                            <span className="rounded-md bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                                {data.projectType}
-                            </span>
-
-                            {data.featured && (
-                                <span className="rounded-md border px-3 py-1 text-xs">
-                                    Featured
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Project Tabs and Sidebar */}
-            <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
-                <div className="min-w-0">
-                    <Tabs value={activeTab} onValueChange={setActiveTab}>
-                        <TabsList className="grid h-auto w-full grid-cols-4">
-                            {tabs.map((tab) => {
-                                const Icon = tab.icon;
-
-                                return (
-                                    <TabsTrigger
-                                        key={tab.value}
-                                        value={tab.value}
-                                        className="gap-2 py-3"
-                                    >
-                                        <Icon size={16} />
-                                        <span className="hidden sm:inline">{tab.label}</span>
-                                        <span className="sm:hidden">
-                                            {tab.value === "technical"
-                                                ? "Tech"
-                                                : tab.value.charAt(0).toUpperCase() +
-                                                tab.value.slice(1)}
-                                        </span>
-                                    </TabsTrigger>
-                                );
-                            })}
-                        </TabsList>
-
-                        {tabs.map((tab) => (
-                            <TabsContent
-                                key={tab.value}
-                                value={tab.value}
-                                className="mt-4"
-                            >
-                                {tab.component}
-                            </TabsContent>
-                        ))}
-                    </Tabs>
-                </div>
-
-                {/* Right Sidebar */}
-                <aside className="space-y-4">
-                    <ProjectInformation data={data} />
-                    <Timeline data={data} />
-                    <ProjectLinks data={data} />
-                    <SEOSection data={data} compact />
-                    <SystemInfo data={data} />
-                </aside>
-            </div>
+            {/* Right Sidebar */}
+            <aside className="min-w-0 space-y-4">
+                <ProjectInformation data={data} />
+                <Timeline data={data} />
+                <ProjectLinks data={data} />
+                <SEOSection data={data} compact />
+                <SystemInfo data={data} />
+            </aside>
         </div>
     );
 };

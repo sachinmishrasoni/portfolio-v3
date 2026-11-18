@@ -1,4 +1,5 @@
 
+import { getCategoryLabel, getProjectStatusLabel, getProjectTypeLabel } from "../../../project.utils";
 import type { Project } from "../../../projects.types";
 
 interface ProjectInformationProps {
@@ -25,12 +26,12 @@ const ProjectInformation = ({ data }: ProjectInformationProps) => {
 
             <DetailRow label="Project ID">{data.projectId}</DetailRow>
             <DetailRow label="Slug">{data.slug}</DetailRow>
-            <DetailRow label="Category">{data.category}</DetailRow>
-            <DetailRow label="Project Type">{data.projectType}</DetailRow>
+            <DetailRow label="Category">{getCategoryLabel(data.category)}</DetailRow>
+            <DetailRow label="Project Type">{getProjectTypeLabel(data.projectType)}</DetailRow>
 
             <DetailRow label="Status">
                 <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs text-green-700">
-                    {data.status}
+                    {getProjectStatusLabel(data.status)}
                 </span>
             </DetailRow>
 

@@ -1,4 +1,5 @@
 
+import RichTextContent from "@/components/common/RichTextContent";
 import type { Project } from "../../../projects.types";
 
 interface OverviewProps {
@@ -19,9 +20,11 @@ const Overview = ({ data }: OverviewProps) => {
 
             <section>
                 <h3 className="mb-2 font-semibold">Description</h3>
-                <p className="whitespace-pre-line text-sm leading-6 text-muted-foreground">
-                    {data.description || "No description available."}
-                </p>
+                <RichTextContent
+                    content={data.description}
+                    fallback="No description available."
+                    className="!text-muted-foreground"
+                />
             </section>
 
             <div className="border-t" />
@@ -55,9 +58,11 @@ const Overview = ({ data }: OverviewProps) => {
 
             <section>
                 <h3 className="mb-2 font-semibold">Solution</h3>
-                <p className="whitespace-pre-line text-sm leading-6 text-muted-foreground">
-                    {data.solution || "No solution documented."}
-                </p>
+                <RichTextContent
+                    content={data.solution}
+                    fallback="No solution documented."
+                    className="!text-muted-foreground"
+                />
             </section>
 
             <div className="border-t" />
@@ -78,7 +83,7 @@ const Overview = ({ data }: OverviewProps) => {
                         {data.technologies.map((technology) => (
                             <span
                                 key={technology}
-                                className="rounded-md border bg-background px-3 py-2 text-sm"
+                                className="rounded-full border bg-background px-3 py-1.5 text-xs"
                             >
                                 {technology}
                             </span>

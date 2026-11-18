@@ -1,0 +1,257 @@
+.rich-content {
+    width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: inherit;
+}
+
+.rich-content-body {
+    color: inherit;
+}
+
+/* Paragraphs */
+.rich-content p {
+    margin: 0 0 0.75rem;
+    color: inherit;
+    line-height: 1.7;
+}
+
+.rich-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Headings */
+.rich-content h1,
+.rich-content h2,
+.rich-content h3,
+.rich-content h4,
+.rich-content h5,
+.rich-content h6 {
+    color: hsl(var(--foreground));
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.rich-content h1 {
+    margin: 1.5rem 0 0.75rem;
+    font-size: 1.75rem;
+}
+
+.rich-content h2 {
+    margin: 1.25rem 0 0.75rem;
+    font-size: 1.5rem;
+}
+
+.rich-content h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.25rem;
+}
+
+.rich-content h4 {
+    margin: 0.875rem 0 0.5rem;
+    font-size: 1.125rem;
+}
+
+.rich-content h5,
+.rich-content h6 {
+    margin: 0.75rem 0 0.5rem;
+    font-size: 1rem;
+}
+
+/* Text Formatting */
+.rich-content strong,
+.rich-content b {
+    color: hsl(var(--foreground));
+    font-weight: 600;
+}
+
+.rich-content em,
+.rich-content i {
+    font-style: italic;
+}
+
+.rich-content u {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.rich-content s,
+.rich-content del {
+    text-decoration: line-through;
+}
+
+/* Lists */
+.rich-content ul,
+.rich-content ol {
+    margin: 0.75rem 0 1rem;
+    padding-left: 1.5rem;
+    color: inherit;
+}
+
+.rich-content ul {
+    list-style-type: disc;
+}
+
+.rich-content ol {
+    list-style-type: decimal;
+}
+
+.rich-content li {
+    margin-bottom: 0.35rem;
+    padding-left: 0.25rem;
+    color: inherit;
+}
+
+.rich-content li::marker {
+    color: hsl(var(--primary));
+}
+
+.rich-content li>ul,
+.rich-content li>ol {
+    margin-top: 0.35rem;
+    margin-bottom: 0.35rem;
+}
+
+/* Links */
+.rich-content a {
+    color: hsl(var(--primary));
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+}
+
+.rich-content a:hover {
+    opacity: 0.75;
+}
+
+/* Blockquote */
+.rich-content blockquote {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid hsl(var(--primary));
+    border-radius: 0 0.5rem 0.5rem 0;
+    background: hsl(var(--muted) / 0.5);
+    color: inherit;
+    font-style: italic;
+}
+
+/* Inline Code */
+.rich-content :not(pre)>code {
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    background: hsl(var(--muted));
+    color: hsl(var(--primary));
+    font-family: monospace;
+    font-size: 0.85em;
+}
+
+/* Code Blocks */
+.rich-content pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    font-family: monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.rich-content pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+}
+
+/* Horizontal Rule */
+.rich-content hr {
+    margin: 1.25rem 0;
+    border: 0;
+    border-top: 1px solid hsl(var(--border));
+}
+
+/* Images */
+.rich-content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    object-fit: contain;
+}
+
+/* Tables */
+.rich-content table {
+    width: 100%;
+    margin: 1rem 0;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.rich-content th,
+.rich-content td {
+    padding: 0.625rem 0.75rem;
+    border: 1px solid hsl(var(--border));
+}
+
+.rich-content th {
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    font-weight: 600;
+}
+
+.rich-content td {
+    color: inherit;
+}
+
+.rich-content tbody tr:nth-child(even) {
+    background: hsl(var(--muted) / 0.3);
+}
+
+/* Subscript and Superscript */
+.rich-content sub {
+    vertical-align: sub;
+    font-size: 0.75em;
+}
+
+.rich-content sup {
+    vertical-align: super;
+    font-size: 0.75em;
+}
+
+/* Text Alignment */
+.rich-content [style*="text-align: center"] {
+    text-align: center;
+}
+
+.rich-content [style*="text-align: right"] {
+    text-align: right;
+}
+
+.rich-content [style*="text-align: justify"] {
+    text-align: justify;
+}
+
+/* First and Last Elements */
+.rich-content>div> :first-child {
+    margin-top: 0;
+}
+
+.rich-content>div> :last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive Tables */
+@media (max-width: 640px) {
+    .rich-content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

@@ -57,10 +57,9 @@ export function DataTable<TData>({
         resizable: true,
     }), []);
 
-    const loadingRows = useMemo(() => {
-        return { rowCount: 10 };
-    }, []);
-
+    // const loadingRows = useMemo(() => {
+    //     return { rowCount: 10 };
+    // }, []);
 
     return (
         <Paper className="space-y-4">
@@ -79,7 +78,7 @@ export function DataTable<TData>({
             />
 
             <AgGridProvider modules={modules}>
-                <div className="h-[512px] w-full">
+                <div className="w-full">
                     <AgGridReact<TData>
                         theme={gridTheme}
                         rowData={data}
@@ -88,11 +87,12 @@ export function DataTable<TData>({
                         quickFilterText={searchValue}
                         suppressCellFocus
                         loading={loading}
-                        loadingRows={loadingRows}
+                        // loadingRows={loadingRows}
                         pagination
                         paginationPageSize={pageSize}
                         paginationPageSizeSelector={pageSizeOptions}
-                        domLayout="normal"
+                        // domLayout="normal"
+                        domLayout="autoHeight"
                         getRowId={(params) => {
                             const row = params.data as
                                 | (TData & { id?: string | number })
