@@ -1,0 +1,23 @@
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getProjectById, getProjects } from "../projects.service";
+
+export const projectKeys = {
+    all: ["projects"] as const,
+    lists: () => [...projectKeys.all, "list"] as const,
+    details: () => [...projectKeys.all, "detail"] as const,
+    detail: (id: string) => [...projectKeys.details(), id] as const,
+};
+
+export const useProjects = () =>
+    useQuery({
+        queryKey: projectKeys.lists(),
+        queryFn: getProjects,
+        placeholderData: keepPreviousData,
+    });
+
+export const useProject = (id: string) =>
+    useQuery({
+        queryKey: projectKeys.detail(id),
+        queryFn: () => getProjectById(id),
+        enabled: Boolean(id),
+    });

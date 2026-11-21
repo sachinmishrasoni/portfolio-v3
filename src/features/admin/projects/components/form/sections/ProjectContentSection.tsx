@@ -33,8 +33,8 @@ const ProjectContentSection = () => {
                         name={field.name}
                         label="Overview"
                         placeholder="Write a short introduction about your project..."
-                        rows={1}
-                        maxLength={300}
+                        rows={3}
+                        maxLength={200}
                         showCount
                         required
                         value={field.value}

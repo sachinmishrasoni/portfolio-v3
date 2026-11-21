@@ -1,9 +1,16 @@
 
 import type { CloudinaryProjectImage } from "@/features/admin/projects/projects.types";
 
-type UploadProjectImagesInput = {
-    thumbnail: File;
-    images: File[];
+type UploadImagesInput = {
+    files?: File[];
+    thumbnail?: File;
+    images?: File[];
+    folder?: string;
+};
+
+type UploadImagesResult = {
+    images?: CloudinaryProjectImage[];
+    thumbnail?: CloudinaryProjectImage;
 };
 
 type ApiResponse<T> = {
@@ -15,76 +22,48 @@ type ApiResponse<T> = {
 const parseResponse = async <T>(response: Response): Promise<T> => {
     const result = (await response.json()) as ApiResponse<T>;
 
-    if (!response.ok) {
-        throw new Error(result.message || "Image upload failed");
+    if (!response.ok || !result.success) {
+        throw new Error(result.message || "Image operation failed.");
     }
 
     return result.data;
 };
 
-// Single image upload
-export const uploadCloudinaryImage = async (
-    file: File,
-    folder = "portfolio/projects"
-): Promise<CloudinaryProjectImage> => {
+export const uploadCloudinaryImages = async ({
+    files,
+    thumbnail,
+    images = [],
+    folder = "portfolio/projects",
+}: UploadImagesInput): Promise<UploadImagesResult> => {
     const formData = new FormData();
 
-    formData.append("file", file);
     formData.append("folder", folder);
 
-    const response = await fetch("/api/upload/image", {
-        method: "POST",
-        body: formData,
-    });
-
-    const data = await parseResponse<{
-        image: CloudinaryProjectImage;
-    }>(response);
-
-    return data.image;
-};
-
-// Multiple project images upload (thumbnail + gallery)
-export const uploadProjectImages = async ({
-    thumbnail,
-    images,
-}: UploadProjectImagesInput): Promise<{
-    thumbnail: CloudinaryProjectImage;
-    images: CloudinaryProjectImage[];
-}> => {
-    const formData = new FormData();
-
-    formData.append("thumbnail", thumbnail);
-
-    images.forEach((image) => {
-        formData.append("images", image);
-    });
+    if (thumbnail) {
+        formData.append("thumbnail", thumbnail);
+        images.forEach((image) => formData.append("images", image));
+    } else {
+        (files ?? images).forEach((file) => formData.append("files", file));
+    }
 
     const response = await fetch("/api/upload/image", {
         method: "POST",
         body: formData,
     });
 
-    return parseResponse<{
-        thumbnail: CloudinaryProjectImage;
-        images: CloudinaryProjectImage[];
-    }>(response);
+    return parseResponse<UploadImagesResult>(response);
 };
 
-// Delete Cloudinary image
-export const deleteCloudinaryImage = async (
-    publicId: string
+export const deleteCloudinaryImages = async (
+    publicIds: string[],
 ): Promise<void> => {
+    if (!publicIds.length) return;
+
     const response = await fetch("/api/cloudinary/delete", {
         method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ publicId }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publicIds }),
     });
 
-    if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.message || "Image deletion failed");
-    }
+    await parseResponse(response);
 };

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {
-    uploadCloudinaryImage,
-    deleteCloudinaryImage,
-} from "@/services/cloudinary/cloudinary.client";
+// import {
+//     uploadCloudinaryImage,
+//     deleteCloudinaryImage,
+// } from "@/services/cloudinary/cloudinary.client";
 import type { CloudinaryUploadResult } from "@/types/image.types";
+import { deleteCloudinaryImages, uploadCloudinaryImages } from "@/services/cloudinary/cloudinary.client";
 
 export default function CloudinaryTestPage() {
     const [file, setFile] = useState<File | null>(null);
@@ -24,10 +25,10 @@ export default function CloudinaryTestPage() {
             setLoading(true);
             setMessage("");
 
-            const result = await uploadCloudinaryImage(
-                file,
-                "portfolio/test"
-            );
+            const result = await uploadCloudinaryImages({
+                files: [file],
+                folder: "portfolio/projects",
+            });
 
             setImage(result as CloudinaryUploadResult);
             setMessage("Image uploaded successfully!");
@@ -47,7 +48,7 @@ export default function CloudinaryTestPage() {
             setLoading(true);
             setMessage("");
 
-            await deleteCloudinaryImage(image.publicId);
+            await deleteCloudinaryImages([image.publicId]);
 
             setImage(null);
             setFile(null);

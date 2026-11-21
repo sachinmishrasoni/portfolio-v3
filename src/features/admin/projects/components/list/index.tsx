@@ -77,7 +77,8 @@ export default function ProjectList({ projects, loading }: { projects: Project[]
                 headerName: "Overview",
                 minWidth: 230,
                 flex: 1.8,
-                tooltipField: "overview",
+                // tooltipField: "overview",
+                tooltip: ({ data }) => data?.overview ?? "",
             },
             {
                 field: "category",

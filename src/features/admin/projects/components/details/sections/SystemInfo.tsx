@@ -1,4 +1,5 @@
 
+import { LuDatabase } from "react-icons/lu";
 import type { Project } from "../../../projects.types";
 
 interface SystemInfoProps {
@@ -24,7 +25,11 @@ const formatDateTime = (value?: Date | string) => {
 const SystemInfo = ({ data }: SystemInfoProps) => {
     return (
         <div className="rounded-xl border bg-card p-4">
-            <h3 className="mb-3 font-semibold">System Information</h3>
+
+            <h3 className="mb-3 flex items-center gap-2 font-semibold">
+                <LuDatabase className="shrink-0 text-primary" />
+                System Information
+            </h3>
 
             <div className="space-y-3">
                 <div className="flex justify-between gap-3 text-sm">

@@ -1,15 +1,23 @@
+
 "use client";
 
-import { useMemo, useState } from "react";
-import type { ColDef } from "ag-grid-community";
-import { AllCommunityModule, themeQuartz } from "ag-grid-community";
+import { useEffect, useMemo, useState } from "react";
+import type { ColDef, GridApi } from "ag-grid-community";
+import {
+    AllCommunityModule,
+    themeQuartz,
+    ValidationModule,
+} from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 
 import { DataTableToolbar } from "./DataTableToolbar";
 import type { DataTableProps } from "./datatable.types";
 import Paper from "../Paper";
 
-const modules = [AllCommunityModule];
+const modules =
+    process.env.NODE_ENV === "development"
+        ? [AllCommunityModule, ValidationModule]
+        : [AllCommunityModule];
 
 const gridTheme = themeQuartz.withParams({
     backgroundColor: "var(--background)",
@@ -33,9 +41,9 @@ export function DataTable<TData>({
     pageSize = 10,
     pageSizeOptions = [5, 10, 20, 50],
     loading = false,
-    className,
 }: DataTableProps<TData>) {
     const [searchValue, setSearchValue] = useState("");
+    const [gridApi, setGridApi] = useState<GridApi<TData> | null>(null);
 
     // Toolbar defaults
     const {
@@ -44,11 +52,11 @@ export function DataTable<TData>({
         showSearch = true,
         showFilter = false,
         showAddButton = true,
-
         onAdd,
         onFilterClick,
     } = toolbar ?? {};
 
+    // Default column configuration
     const defaultColDef = useMemo<ColDef<TData>>(() => ({
         flex: 1,
         minWidth: 130,
@@ -61,9 +69,16 @@ export function DataTable<TData>({
     //     return { rowCount: 10 };
     // }, []);
 
+    // Synchronize data and loading state with AG Grid
+    useEffect(() => {
+        if (!gridApi || gridApi.isDestroyed()) return;
+
+        gridApi.setGridOption("rowData", data ?? []);
+        gridApi.setGridOption("loading", Boolean(loading));
+    }, [gridApi, data, loading]);
+
     return (
         <Paper className="space-y-4">
-            {/* <div className={`w-full space-y-4 ${className ?? ""}`}> */}
             <DataTableToolbar
                 title={title}
                 addButtonLabel={addButtonLabel}
@@ -78,34 +93,31 @@ export function DataTable<TData>({
             />
 
             <AgGridProvider modules={modules}>
-                <div className="w-full">
+                <div className="w-full min-h-[250px]">
                     <AgGridReact<TData>
                         theme={gridTheme}
-                        rowData={data}
                         columnDefs={columns}
+                        rowData={data ?? []}
                         defaultColDef={defaultColDef}
                         quickFilterText={searchValue}
                         suppressCellFocus
-                        loading={loading}
-                        // loadingRows={loadingRows}
+                        suppressMovableColumns
                         pagination
                         paginationPageSize={pageSize}
                         paginationPageSizeSelector={pageSizeOptions}
-                        // domLayout="normal"
+                        // loadingRows={loadingRows}
                         domLayout="autoHeight"
-                        getRowId={(params) => {
-                            const row = params.data as
-                                | (TData & { id?: string | number })
-                                | undefined;
-
-                            return row?.id != null
-                                ? String(row.id)
-                                : String(params.data);
+                        onGridReady={(event) => {
+                            setGridApi(event.api);
+                        }}
+                        onGridPreDestroyed={(event) => {
+                            setGridApi((current) =>
+                                current === event.api ? null : current
+                            );
                         }}
                     />
                 </div>
             </AgGridProvider>
-            {/* </div> */}
         </Paper>
     );
 }

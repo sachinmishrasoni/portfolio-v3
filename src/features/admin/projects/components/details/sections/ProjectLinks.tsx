@@ -15,7 +15,7 @@ const ProjectLinks = ({ data }: ProjectLinksProps) => {
     return (
         <div className="rounded-xl border bg-card p-4">
             <h3 className="mb-3 flex items-center gap-2 font-semibold">
-                <FiLink className="text-primary" />
+                <FiLink className="shrink-0 text-primary" />
                 Project Links
             </h3>
 
@@ -24,24 +24,28 @@ const ProjectLinks = ({ data }: ProjectLinksProps) => {
                     {links.map((link) => (
                         <div
                             key={link.label}
-                            className="flex items-center justify-between gap-3"
+                            className="flex items-center gap-3"
                         >
-                            <span className="text-sm text-muted-foreground">{link.label}</span>
+                            <span className="w-20 shrink-0 whitespace-nowrap text-sm text-muted-foreground">
+                                {link.label}
+                            </span>
 
                             <a
                                 href={link.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex min-w-0 items-center gap-1 text-sm text-primary hover:underline"
+                                className="flex min-w-0 flex-1 items-center gap-1 text-sm text-primary hover:underline"
                             >
-                                <span className="truncate">{link.url}</span>
+                                <span className="min-w-0 truncate">{link.url}</span>
                                 <FiExternalLink className="shrink-0" size={14} />
                             </a>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className="text-sm text-muted-foreground">No project links available.</p>
+                <p className="text-sm text-muted-foreground">
+                    No project links available.
+                </p>
             )}
         </div>
     );

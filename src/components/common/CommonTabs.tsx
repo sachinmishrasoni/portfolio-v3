@@ -95,7 +95,7 @@ const CommonTabs = ({
                         relative !h-12 !w-full !p-1 shrink-0
                         flex items-center justify-start gap-1.5
                         overflow-x-auto overflow-y-hidden
-                        !rounded-xl border border-border bg-muted/70
+                        !rounded-lg border border-border bg-muted/70
                         [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
                         ${listClassName}
                     `}
@@ -154,7 +154,7 @@ const CommonTabs = ({
                                         <motion.span
                                             layoutId="common-tabs-active-background"
                                             className="
-                                                absolute inset-0 -z-10 rounded-xl
+                                                absolute inset-0 -z-10 rounded-lg
                                                 border border-primary/40 bg-primary/10
                                             "
                                             transition={{

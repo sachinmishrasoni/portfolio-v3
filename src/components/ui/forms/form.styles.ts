@@ -71,10 +71,16 @@ const sizeTrigger: Record<FieldSize, string> = {
     lg: 'h-12 py-0 data-[size=default]:h-12 data-[size=sm]:h-12',
 };
 
+// const sizeTextarea: Record<FieldSize, string> = {
+//     sm: 'min-h-20 py-1.5',
+//     md: 'min-h-28 py-2',
+//     lg: 'min-h-32 py-3',
+// };
+
 const sizeTextarea: Record<FieldSize, string> = {
-    sm: 'min-h-20 py-1.5',
-    md: 'min-h-28 py-2',
-    lg: 'min-h-32 py-3',
+    sm: 'py-1.5',
+    md: 'py-2',
+    lg: 'py-3',
 };
 
 /** Right padding that makes room for the icon button (password eye, etc.) */
@@ -104,6 +110,24 @@ export const inputClass = (
         cn('peer', sizeHeight[size], sizeText[size], variant === 'outlined' && outlinedPlaceholder, className),
     );
 
+// export const textareaClass = (
+//     invalid: boolean,
+//     className?: string,
+//     variant: FieldVariant = 'default',
+//     size: FieldSize = 'md',
+// ) =>
+//     controlClass(
+//         invalid,
+//         variant,
+//         cn(
+//             'peer resize-none',
+//             sizeText[size],
+//             sizeTextarea[size],
+//             variant === 'outlined' && outlinedPlaceholder,
+//             className,
+//         ),
+//     );
+
 export const textareaClass = (
     invalid: boolean,
     className?: string,
@@ -114,7 +138,8 @@ export const textareaClass = (
         invalid,
         variant,
         cn(
-            'peer resize-none',
+            // `field-sizing-fixed` and `min-h-0` stop shadcn's auto-size and min-height from overriding `rows`
+            'peer resize-none field-sizing-fixed min-h-0',
             sizeText[size],
             sizeTextarea[size],
             variant === 'outlined' && outlinedPlaceholder,

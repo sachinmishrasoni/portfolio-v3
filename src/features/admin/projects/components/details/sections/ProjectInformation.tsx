@@ -1,4 +1,5 @@
 
+import { LuBadgeInfo } from "react-icons/lu";
 import { getCategoryLabel, getProjectStatusLabel, getProjectTypeLabel } from "../../../project.utils";
 import type { Project } from "../../../projects.types";
 
@@ -22,7 +23,10 @@ const DetailRow = ({
 const ProjectInformation = ({ data }: ProjectInformationProps) => {
     return (
         <div className="rounded-xl border bg-card p-4">
-            <h3 className="mb-3 font-semibold">Project Information</h3>
+            <h3 className="mb-3 flex items-center gap-2 font-semibold">
+                <LuBadgeInfo className="shrink-0 text-primary" />
+                Project Information
+            </h3>
 
             <DetailRow label="Project ID">{data.projectId}</DetailRow>
             <DetailRow label="Slug">{data.slug}</DetailRow>

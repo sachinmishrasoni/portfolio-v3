@@ -1,6 +1,9 @@
 
-import type { Project } from "../../projects.types";
-import type { ProjectFormInput } from "../../project.schema";
+import type { Project, ProjectImage, ProjectInput } from "../../projects.types";
+import type { ProjectFormInput, ProjectFormValues } from "../../project.schema";
+
+// import type { ProjectFormValues } from "./project-form.schema";
+// import type { ProjectImage, ProjectInput } from "./projects.types";
 
 const parseDate = (value?: string) => {
     if (!value) return undefined;
@@ -86,3 +89,44 @@ export const mapProjectToForm = (
     metaTitle: project.seo?.metaTitle ?? "",
     metaDescription: project.seo?.metaDescription ?? "",
 });
+
+
+export const mapProjectFormToInput = (
+    values: ProjectFormValues,
+    thumbnail: ProjectImage,
+    images: ProjectImage[],
+): ProjectInput => ({
+    title: values.title,
+    slug: values.slug,
+    overview: values.overview,
+    description: values.description,
+    category: values.category,
+    projectType: values.projectType,
+    status: values.status,
+    mediaMode: values.mediaMode,
+    thumbnail,
+    images,
+    technologies: values.technologies,
+    features: values.features,
+    role: values.role || undefined,
+    challenges: values.challenges || undefined,
+    solution: values.solution || undefined,
+    startDate: values.startDate.toISOString(),
+    endDate: values.endDate?.toISOString(),
+    liveUrl: values.liveUrl || undefined,
+    githubUrl: values.githubUrl || undefined,
+    featured: values.featured,
+    published: values.published,
+    displayOrder: values.displayOrder,
+    ...(values.metaTitle || values.metaDescription
+        ? {
+            seo: {
+                ...(values.metaTitle && { metaTitle: values.metaTitle }),
+                ...(values.metaDescription && {
+                    metaDescription: values.metaDescription,
+                }),
+            },
+        }
+        : {}),
+});
+

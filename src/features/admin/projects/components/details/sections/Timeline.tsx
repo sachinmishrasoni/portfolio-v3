@@ -1,4 +1,5 @@
 
+import { LuCalendar } from "react-icons/lu";
 import type { Project } from "../../../projects.types";
 
 interface TimelineProps {
@@ -38,7 +39,10 @@ const getDuration = (startDate: string, endDate?: string) => {
 const Timeline = ({ data }: TimelineProps) => {
     return (
         <div className="rounded-xl border bg-card p-4">
-            <h3 className="mb-3 font-semibold">Timeline</h3>
+            <h3 className="mb-3 flex items-center gap-2 font-semibold">
+                <LuCalendar className="shrink-0 text-primary" />
+                Timeline
+            </h3>
 
             <div className="space-y-3">
                 <div className="flex justify-between gap-3 text-sm">
