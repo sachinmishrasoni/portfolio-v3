@@ -85,7 +85,7 @@ export default function DataTableActions<TData>({
 
                             <DropdownMenuItem
                                 onClick={() => onDelete(data)}
-                                className="text-destructive focus:text-destructive"
+                                variant="destructive"
                             >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete

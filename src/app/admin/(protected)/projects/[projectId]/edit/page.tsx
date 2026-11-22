@@ -43,7 +43,6 @@ const EditProjectPage = () => {
     };
 
     // Handle form submission
-
     const handleFormSubmit = async (values: ProjectFormValues) => {
         if (!project) return;
 

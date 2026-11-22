@@ -8,6 +8,7 @@ import SitePreloader from "@/components/common/SitePreloader";
 import QueryProvider from "@/providers/QueryProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense } from "react";
+import { AlertProvider } from "@/components/common/alert";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <TooltipProvider>
               {children}
             </TooltipProvider>
+            <AlertProvider />
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>

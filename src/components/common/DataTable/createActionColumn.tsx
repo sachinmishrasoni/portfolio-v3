@@ -43,6 +43,6 @@ export const createActionColumn = <TData,>({
             showEdit,
             showDelete,
         },
-        cellClass: "flex items-center justify-center",
+        cellClass: "!flex items-center justify-center",
     };
 };
