@@ -102,6 +102,8 @@ export type DateFieldProps = FieldBaseProps & {
     maxDate?: string;
 };
 
+/* ------------------------------ MultiSelectField -------------------------- */
+
 export type MultiSelectFieldProps = FieldBaseProps & {
     options: SelectOption[];
     /** The selected options' `value`s */
@@ -118,4 +120,15 @@ export type MultiSelectFieldProps = FieldBaseProps & {
     /** Shown when the search finds nothing */
     emptyText?: string;
     searchPlaceholder?: string;
+};
+
+/* -------------------------------- ColorField ------------------------------- */
+
+export type ColorFieldProps = FieldBaseProps & {
+    /** A hex color like "#1a2b3c" (or "#abc"), or '' for no color */
+    value: string;
+    /** Gets the new hex string (not an event), from typing or from the picker */
+    onChange: (value: string) => void;
+    onBlur?: FocusEventHandler<HTMLInputElement>;
+    autoFocus?: boolean;
 };

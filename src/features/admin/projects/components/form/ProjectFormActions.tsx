@@ -1,8 +1,7 @@
 
 "use client";
 
-import { FiLoader, FiSave } from "react-icons/fi";
-
+import { FiSave } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
 interface ProjectFormActionsProps {
@@ -33,18 +32,11 @@ const ProjectFormActions = ({
             <Button
                 type="submit"
                 disabled={isSubmitting}
+                loading={isSubmitting}
+                loadingText="Saving..."
+                startIcon={<FiSave className="mr-2" />}
             >
-                {isSubmitting ? (
-                    <>
-                        <FiLoader className="mr-2 animate-spin" />
-                        Saving...
-                    </>
-                ) : (
-                    <>
-                        <FiSave className="mr-2" />
-                        {isEdit ? "Update Project" : "Save Project"}
-                    </>
-                )}
+                {isEdit ? "Save Changes" : "Create Project"}
             </Button>
         </div>
     );

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 
 import type { ProjectFormInput } from "../../../project.schema";
 import ProjectFormSection from "../ProjectFormSection";
+import SettingSwitch from "@/components/common/SettingSwitch";
 
 interface StatusSwitchProps {
     id: string;
@@ -19,40 +20,6 @@ interface StatusSwitchProps {
     onCheckedChange: (checked: boolean) => void;
     disabled?: boolean;
 }
-
-const StatusSwitch = ({
-    id,
-    label,
-    description,
-    checked,
-    onCheckedChange,
-    disabled,
-}: StatusSwitchProps) => {
-    return (
-        <div className="rounded-xl border border-border p-3">
-            <div className="mb-1 flex items-center justify-between gap-3">
-                <Label
-                    htmlFor={id}
-                    className="cursor-pointer text-sm font-medium"
-                >
-                    {label}
-                </Label>
-
-                <Switch
-                    id={id}
-                    checked={checked}
-                    onCheckedChange={onCheckedChange}
-                    disabled={disabled}
-                    size="sm"
-                />
-            </div>
-
-            <p className="text-xs leading-4 text-muted-foreground">
-                {description}
-            </p>
-        </div>
-    );
-};
 
 const PublishingSettingsSection = () => {
     const {
@@ -73,7 +40,7 @@ const PublishingSettingsSection = () => {
                     name="featured"
                     control={control}
                     render={({ field }) => (
-                        <StatusSwitch
+                        <SettingSwitch
                             id="project-featured"
                             label="Featured"
                             description="Show in featured section (e.g. homepage)."
@@ -89,7 +56,7 @@ const PublishingSettingsSection = () => {
                     name="published"
                     control={control}
                     render={({ field }) => (
-                        <StatusSwitch
+                        <SettingSwitch
                             id="project-published"
                             label="Published"
                             description="Make this project visible on the public site."
