@@ -1,6 +1,8 @@
 import type { IconType } from 'react-icons';
+import { IoSchoolOutline } from 'react-icons/io5';
 import {
     LuBriefcase,
+    LuBriefcaseBusiness,
     LuCode,
     LuFolderKanban,
     LuLayoutDashboard,
@@ -46,7 +48,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         items: [
             { id: 'projects', label: 'Projects', href: `${ADMIN_BASE}/projects`, icon: LuFolderKanban },
             { id: 'skills', label: 'Skills', href: `${ADMIN_BASE}/skills`, icon: LuCode },
-            { id: 'experience', label: 'Experience', href: `${ADMIN_BASE}/experience`, icon: LuBriefcase },
+            { id: 'education', label: 'Education', href: `${ADMIN_BASE}/education`, icon: IoSchoolOutline },
+            { id: 'experience', label: 'Experience', href: `${ADMIN_BASE}/experience`, icon: LuBriefcaseBusiness },
             { id: 'services', label: 'Services', href: `${ADMIN_BASE}/services`, icon: LuSparkles },
         ],
     },
