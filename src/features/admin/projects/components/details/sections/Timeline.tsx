@@ -1,24 +1,12 @@
 
 import { LuCalendar } from "react-icons/lu";
 import type { Project } from "../../../projects.types";
+import { formatDate } from "@/lib/utils/date.utils";
 
 interface TimelineProps {
     data: Project;
 }
 
-const formatDate = (value?: string) => {
-    if (!value) return "Not specified";
-
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) return "Invalid date";
-
-    return new Intl.DateTimeFormat("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-    }).format(date);
-};
 
 const getDuration = (startDate: string, endDate?: string) => {
     const start = new Date(startDate);

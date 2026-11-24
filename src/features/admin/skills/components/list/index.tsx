@@ -17,15 +17,12 @@ import type { Skill } from "../../skill.types";
 import { useCreateSkillMutation, useDeleteSkillMutation, useUpdateSkillMutation } from "../../hooks/skill.mutations";
 
 import SkillCell from "./cells/SkillCell";
-import CategoryCell from "./cells/CategoryCell";
 import ProficiencyCell from "./cells/ProficiencyCell";
 import StatusCell from "./cells/StatusCell";
-import CreatedDateCell from "./cells/CreatedDateCell";
-
-import { getCategoryLabel } from "../../skill.utils";
 import SkillFormDialog from "../form/SkillFormDialog";
 import { SkillFormValues } from "../../skill.schema";
 import SkillDetailsDialog from "../details/SkillDetailsDialog";
+import { formatDate } from "@/lib/utils/date.utils";
 
 interface SkillsListProps {
     skills: Skill[];
@@ -172,7 +169,7 @@ export default function SkillsList({
                 field: "createdAt",
                 minWidth: 150,
                 flex: 0.9,
-                cellRenderer: CreatedDateCell,
+                cellRenderer: ({ value }: ICellRendererParams<Skill, Date | undefined>) => formatDate(value),
             },
             createActionColumn({
                 onView: handleView,

@@ -14,22 +14,13 @@ import { Separator } from "@/components/ui/separator";
 
 import type { Skill } from "../../skill.types";
 import { getCategoryLabel } from "../../skill.utils";
+import { formatDate } from "@/lib/utils/date.utils";
 
 interface SkillDetailsDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     skill: Skill | null;
 }
-
-const formatDate = (date?: Date) => {
-    if (!date) return "—";
-
-    return new Intl.DateTimeFormat("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-    }).format(date);
-};
 
 const SkillDetailsDialog = ({
     open,

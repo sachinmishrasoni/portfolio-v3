@@ -1,26 +1,11 @@
 
 import { LuDatabase } from "react-icons/lu";
 import type { Project } from "../../../projects.types";
+import { formatDate } from "@/lib/utils/date.utils";
 
 interface SystemInfoProps {
     data: Project;
 }
-
-const formatDateTime = (value?: Date | string) => {
-    if (!value) return "Not available";
-
-    const date = value instanceof Date ? value : new Date(value);
-
-    if (Number.isNaN(date.getTime())) return "Not available";
-
-    return new Intl.DateTimeFormat("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(date);
-};
 
 const SystemInfo = ({ data }: SystemInfoProps) => {
     return (
@@ -35,14 +20,14 @@ const SystemInfo = ({ data }: SystemInfoProps) => {
                 <div className="flex justify-between gap-3 text-sm">
                     <span className="text-muted-foreground">Created At</span>
                     <span className="text-right font-medium">
-                        {formatDateTime(data.createdAt)}
+                        {formatDate(data.createdAt)}
                     </span>
                 </div>
 
                 <div className="flex justify-between gap-3 text-sm">
                     <span className="text-muted-foreground">Updated At</span>
                     <span className="text-right font-medium">
-                        {formatDateTime(data.updatedAt)}
+                        {formatDate(data.updatedAt)}
                     </span>
                 </div>
             </div>

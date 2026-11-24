@@ -14,8 +14,8 @@ import { toast } from "sonner";
 import { useDeleteProject } from "../../hooks/projects.mutations";
 import ProjectCell from "./cells/ProjectCell";
 import StatusCell from "./cells/StatusCell";
-import CreatedDateCell from "./cells/CreatedDateCell";
 import { getCategoryLabel } from "../../project.utils";
+import { formatDate } from "@/lib/utils/date.utils";
 
 
 export default function ProjectList({ projects, loading }: { projects: Project[], loading: boolean }) {
@@ -93,7 +93,7 @@ export default function ProjectList({ projects, loading }: { projects: Project[]
                 field: "createdAt",
                 minWidth: 140,
                 flex: 0.9,
-                cellRenderer: CreatedDateCell,
+                cellRenderer: ({ value }: ICellRendererParams<Project, Date | undefined>) => formatDate(value),
             },
             createActionColumn({
                 onView: handleView,

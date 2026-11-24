@@ -8,16 +8,8 @@ import { DateField } from "@/components/ui/forms";
 
 import type { ProjectFormInput } from "../../../project.schema";
 import ProjectFormSection from "../ProjectFormSection";
+import { formatDateInput } from "@/lib/utils/date.utils";
 
-const toDateInput = (date?: Date) => {
-    if (!date) return "";
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-};
 
 const parseDate = (value: string) => {
     if (!value) return undefined;
@@ -93,7 +85,7 @@ const ProjectTimelineSection = () => {
                             label="Start Date"
                             placeholder="Select start date"
                             required
-                            value={field.value ? toDateInput(field.value) : ""}
+                            value={field.value ? formatDateInput(field.value) : ""}
                             onChange={(value) =>
                                 field.onChange(parseDate(value))
                             }
@@ -114,7 +106,7 @@ const ProjectTimelineSection = () => {
                             name={field.name}
                             label="End Date"
                             placeholder="Select end date"
-                            value={field.value ? toDateInput(field.value) : ""}
+                            value={field.value ? formatDateInput(field.value) : ""}
                             onChange={(value) =>
                                 field.onChange(value ? parseDate(value) : undefined)
                             }
