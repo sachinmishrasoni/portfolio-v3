@@ -56,6 +56,31 @@ export const formatDate = (
 };
 
 /**
+ * Formats date with time using the Indian locale.
+ * Example: 26 Nov 2026, 10:45 PM
+ */
+export const formatDateTime = (
+    value?: Date | string | null
+): string => {
+    if (!value) return "—";
+
+    const date = value instanceof Date ? value : new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "—";
+    }
+
+    return date.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    });
+};
+
+/**
  * Formats a date into month and year.
  * Example: Nov 2026
  */
