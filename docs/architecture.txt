@@ -1062,7 +1062,6 @@ Components:
 - AdminSidebar
 - AdminHeader
 - AdminBreadcrumb
-- AdminPageHeader
 - AdminContent
 - UserMenu
 - ThemeToggle

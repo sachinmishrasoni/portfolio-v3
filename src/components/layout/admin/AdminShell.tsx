@@ -1,76 +1,58 @@
 'use client';
 
-import React, { useEffect, useState, type ReactNode } from 'react';
+import React, { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import AdminFooter from './AdminFooter';
 import AdminHeader from './AdminHeader';
-import AdminMobileNav from './AdminMobileNav';
 import AdminSidebar from './AdminSidebar';
-import { ADMIN_BASE, type AdminUser } from '@/config/admin.config';
+import { ADMIN_BASE, SIDEBAR_COOKIE, type AdminUser } from '@/config/admin.config';
 import { logout } from '@/features/admin/auth/auth.service';
 import { toast } from 'sonner';
-
-const STORAGE_KEY = 'admin-sidebar-collapsed';
 
 type AdminShellProps = {
     children: ReactNode;
     user: AdminUser;
     /** Unread counters by nav item id, e.g. { messages: 3 } */
     badges?: Record<string, number>;
+    /** Read from the cookie on the server, so the first paint is already correct */
+    defaultCollapsed?: boolean;
 };
 
-/**
- * The frame around every admin page:
- *
- *   ┌──────────┬────────────────────────────┐
- *   │          │ header (sticky)            │
- *   │ sidebar  ├────────────────────────────┤
- *   │ (sticky) │ main  ← your pages         │
- *   │          ├────────────────────────────┤
- *   │          │ footer                     │
- *   └──────────┴────────────────────────────┘
- *
- * Below `lg` the sidebar becomes a drawer opened from the header.
- */
-const AdminShell: React.FC<AdminShellProps> = ({ children, user, badges }) => {
+const AdminShell: React.FC<AdminShellProps> = ({
+    children,
+    user,
+    badges,
+    defaultCollapsed = false,
+}) => {
     const pathname = usePathname();
     const router = useRouter();
 
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(defaultCollapsed);
     const [mobileOpen, setMobileOpen] = useState(false);
-    // Stays false until the saved state has been applied, so the sidebar doesn't visibly animate on load
-    const [ready, setReady] = useState(false);
 
-    // Restore the saved collapsed state
-    useEffect(() => {
-        setCollapsed(localStorage.getItem(STORAGE_KEY) === '1');
-        const frame = requestAnimationFrame(() => setReady(true));
-        return () => cancelAnimationFrame(frame);
-    }, []);
-
-    const toggleSidebar = () => {
+    const toggleSidebar = useCallback(() => {
         const next = !collapsed;
         setCollapsed(next);
-        localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
-    };
+        // Saved in a cookie (not localStorage) so the server can render the right width on refresh
+        document.cookie = `${SIDEBAR_COOKIE}=${next ? '1' : '0'}; path=/; max-age=31536000; samesite=lax`;
+    }, [collapsed]);
 
     // Ctrl/⌘ + B toggles the sidebar
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
                 e.preventDefault();
-                const next = !collapsed;
-                setCollapsed(next);
-                localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
+                toggleSidebar();
             }
         };
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
-    }, [collapsed]);
+    }, [toggleSidebar]);
 
     // Close the drawer whenever the page changes
-    useEffect(() => setMobileOpen(false), [pathname]);
-
+    useEffect(() => {
+        setMobileOpen(false);
+    }, [pathname]);
 
     const handleSignOut = async () => {
         try {
@@ -79,9 +61,9 @@ const AdminShell: React.FC<AdminShellProps> = ({ children, user, badges }) => {
             router.replace(`${ADMIN_BASE}/login`);
             router.refresh();
 
-            toast.success("Sign out successful!");
+            toast.success('Sign out successful!');
         } catch (error) {
-            console.error("Sign out failed:", error);
+            console.error('Sign out failed:', error);
         }
     };
 
@@ -94,12 +76,13 @@ const AdminShell: React.FC<AdminShellProps> = ({ children, user, badges }) => {
                 Skip to content
             </a>
 
-            <AdminSidebar collapsed={collapsed} animated={ready} user={user} badges={badges} />
-            <AdminMobileNav
-                open={mobileOpen}
-                onOpenChange={setMobileOpen}
+            {/* One component: desktop sidebar + mobile drawer */}
+            <AdminSidebar
+                collapsed={collapsed}
                 user={user}
                 badges={badges}
+                mobileOpen={mobileOpen}
+                onMobileOpenChange={setMobileOpen}
             />
 
             {/* min-w-0 lets wide tables scroll inside the page instead of stretching the layout */}
