@@ -67,7 +67,7 @@ export const ADMIN_NAV: NavMenuItem[] = [
                 icon: LuFolderKanban,
                 children: [
                     { id: 'projects-all', label: 'All projects', href: `${ADMIN_BASE}/projects`, icon: LuList },
-                    { id: 'projects-new', label: 'New project', href: `${ADMIN_BASE}/projects/new`, icon: LuPlus },
+                    { id: 'projects-new', label: 'New project', href: `${ADMIN_BASE}/projects/create`, icon: LuPlus },
                 ],
             },
             { id: 'skills', label: 'Skills', href: `${ADMIN_BASE}/skills`, icon: LuCode },

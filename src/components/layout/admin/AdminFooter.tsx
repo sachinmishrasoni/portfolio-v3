@@ -1,49 +1,28 @@
-"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ADMIN_BASE, ADMIN_VERSION, SITE_URL } from '@/config/admin.config';
+import React from 'react';
+
+import { ADMIN_VERSION } from '@/config/admin.config';
 
 const AdminFooter: React.FC = () => {
-    const [year, setYear] = useState<number | null>(null);
-
-    useEffect(() => {
-        setYear(new Date().getFullYear());
-    }, []);
+    const year = new Date().getFullYear();
 
     return (
-        <footer className="shrink-0 border-t border-border px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-                <p className="font-mono">
-                    © {year} Sachin Mishra Soni · Portfolio admin{' '}
-                    <span className="text-muted-foreground/70">v{ADMIN_VERSION}</span>
+        <footer className="shrink-0 border-t border-border bg-background px-4 py-3 sm:px-6">
+            <div className="flex flex-col items-center justify-center gap-1.5 text-center sm:flex-row sm:justify-between sm:gap-4">
+
+                {/* Copyright */}
+                <p className="text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+                    © {year} Sachin Mishra Soni. All rights reserved.
                 </p>
 
-                <nav aria-label="Admin footer">
-                    <ul className="flex items-center gap-4">
-                        <li>
-                            <a
-                                href={SITE_URL}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="transition-colors hover:text-foreground"
-                            >
-                                View live site
-                            </a>
-                        </li>
-                        <li>
-                            <Link
-                                href={`${ADMIN_BASE}/settings`}
-                                className="transition-colors hover:text-foreground"
-                            >
-                                Settings
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
+                {/* Application Version */}
+                <p className="font-mono text-[10px] text-muted-foreground/70 sm:text-xs">
+                    Portfolio Admin <span className="mx-1">·</span> v{ADMIN_VERSION}
+                </p>
+
             </div>
         </footer>
-    )
+    );
 };
 
 export default AdminFooter;
